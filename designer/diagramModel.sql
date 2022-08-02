@@ -5,28 +5,29 @@ Table clients {
   surname varchar
   patronymic varchar
   phone varchar
-  adress varchar
+  address varchar
+  fax varchar
   score varchar
-  Notes varchar
+  notes varchar
 }
 
 Table contract {
   id int
-  data int
+  date date
   about varchar
-  patronymic varchar
   id_product int
   amount int
   terms varchar
-  name_provider varchar
   id_client int
-  id_manufacturer int
+  amounts int
   price int
+  sale_or_supply varchar
 }
 
 Table manufacturer {
   id int
   name varchar
+  address varchar
   director varchar
   accountant varchar
   products varchar
@@ -40,12 +41,14 @@ Table product{
   priceOne int
   package varchar
   batchDelivery varchar
+  amount int
+  id_manufacturer int
 }
 
 Enum shipment_status {
-  ready_for_shipment
+  no_shipped
   shipped
-  not_shipped
+
 }
 Enum payment_status{
   not_paid
@@ -62,8 +65,8 @@ Table score{
   shipment_status enum
   payment_status enum
 }
-Ref: contract.id_client - clients.id
-Ref: contract.id_manufacturer - manufacturer.id
+Ref: contract.id_client > clients.id
+Ref: manufacturer.id < product.id_manufacturer 
 Ref: contract.id_product > product.id
 Ref: score.id_contract - contract.id
 
