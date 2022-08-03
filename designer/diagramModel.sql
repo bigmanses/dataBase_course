@@ -19,7 +19,6 @@ Table contract {
   amount int
   terms varchar
   id_client int
-  amounts int
   price int
   sale_or_supply varchar
 }
@@ -45,16 +44,6 @@ Table product{
   id_manufacturer int
 }
 
-Enum shipment_status {
-  no_shipped
-  shipped
-
-}
-Enum payment_status{
-  not_paid
-  paid
-}
-
 Table score{
   id_score int
   name varchar
@@ -62,8 +51,8 @@ Table score{
   id_contract int
   date int
   sum int
-  shipment_status enum
-  payment_status enum
+  shipment_status boolean
+  payment_status boolean
 }
 Ref: contract.id_client > clients.id
 Ref: manufacturer.id < product.id_manufacturer 

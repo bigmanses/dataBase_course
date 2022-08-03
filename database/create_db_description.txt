@@ -1,0 +1,10 @@
+ * установить postgres
+ * sudo su -c 'psql -c "alter user postgres with password '"'"'postgres'"'"' "' - postgres
+ * mcedit /etc/postgresql/9.5/main/postgresql.conf
+   listen_addresses = '*'
+ * mcedit /etc/postgresql/9.5/main/pg_hba.conf
+   md5
+   local+127 trust
+ * sudo service postgresql restart
+ * create_db.sh (create_schema+create_data)
+ * restore pg_hba
