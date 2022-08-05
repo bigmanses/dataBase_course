@@ -21,5 +21,5 @@ INSERT INTO contract (date_contract, about, product, amount, terms, client, pric
  ('August 8, 2022', 'Покупка 5 пар джинс', 3, 5, 'Заказ будет оплачен картой', 2, 20000, true);
 
 INSERT INTO score (name, number, contract, date_score, sum, shipment_status, payment_status) values
- ('Счет', '15471', 1, 'January 8, 2022', 20000, true, false),
+ ('Счет', '15471', 1, 'January 8, 2022', 20000, false, true),
  ('Счет', '15472', 2, 'August 8, 2022', 50000, true, false);

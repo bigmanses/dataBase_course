@@ -62,3 +62,40 @@ CREATE TABLE score(
   CHECK(sum > 0)
 );
 
+CREATE OR REPLACE VIEW product_for_buying
+AS
+   SELECT * FROM product WHERE amount > 0;
+
+CREATE OR REPLACE VIEW score_not_payment
+AS
+   SELECT * FROM score WHERE payment_status = false;
+
+CREATE OR REPLACE VIEW score_sum_payment
+AS
+   SELECT id, name, number, sum, payment_status FROM score;
+
+CREATE OR REPLACE VIEW contract_info
+   AS
+      SELECT * FROM contract;
+
+CREATE OR REPLACE VIEW product_for_order
+   AS
+      SELECT DISTINCT product.*, manufacturer.name AS brand FROM contract JOIN product ON contract.product = product.id
+      JOIN manufacturer on product.manufacturer = manufacturer.id;
+CREATE OR REPLACE VIEW product_for_stock
+   AS
+      SELECT DISTINCT product.*, manufacturer.name AS brand FROM score JOIN contract ON score.contract = contract.id
+       JOIN product ON contract.product = product.id  JOIN manufacturer ON product.manufacturer = manufacturer.id
+       WHERE shipment_status = true;
+
+CREATE OR REPLACE VIEW product_give_away
+   AS
+      SELECT DISTINCT product.*, manufacturer.name AS brand FROM score JOIN contract ON score.contract = contract.id
+       JOIN product ON contract.product = product.id  JOIN manufacturer ON product.manufacturer = manufacturer.id
+       WHERE shipment_status = true AND payment_status = true;
+
+CREATE OR REPLACE VIEW client_for_product
+   AS
+      SELECT DISTINCT client.* FROM contract JOIN client ON contract.client = client.id
+       JOIN product ON contract.product = product.id  JOIN manufacturer ON product.manufacturer = manufacturer.id
+       WHERE product.name = 'adidas  crazychaos 2.0 ';
