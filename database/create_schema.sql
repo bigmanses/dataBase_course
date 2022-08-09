@@ -92,7 +92,7 @@ CREATE OR REPLACE VIEW product_give_away
    AS
       SELECT DISTINCT product.*, manufacturer.name AS brand FROM score JOIN contract ON score.contract = contract.id
        JOIN product ON contract.product = product.id  JOIN manufacturer ON product.manufacturer = manufacturer.id
-       WHERE shipment_status = true AND payment_status = true;
+       WHERE payment_status  = true AND shipment_status = true;
 
 CREATE OR REPLACE VIEW client_for_product
    AS
@@ -100,18 +100,20 @@ CREATE OR REPLACE VIEW client_for_product
        JOIN product ON contract.product = product.id  JOIN manufacturer ON product.manufacturer = manufacturer.id
        WHERE product.name = 'adidas  crazychaos 2.0 ';
 
+CREATE INDEX product_name_index ON product (name);
+CREATE INDEX score_payment_index on score (payment_status, sum);
 COMMENT ON TABLE client  IS 'Таблица клиентов, которые заказывают что-то';
 COMMENT ON TABLE manufacturer  IS 'Таблица производителей, которые продают товар';
 COMMENT ON TABLE product  IS 'Таблица продуктов, которые продают производители';
 COMMENT ON TABLE contract  IS 'Таблица договоров, которые заключают между собой клиентыи производители';
 COMMENT ON TABLE score  IS 'Таблица счетов, которые выдаются на основе договоров';
-COMMENT ON TABLE product_for_buying  IS 'Вьюшка с  запросом -  номенклатура предлагаемой на продажу продукции ';
-COMMENT ON TABLE score_not_payment  IS 'Вьюшка с  запросом -  о неоплаченных счетах';
-COMMENT ON TABLE score_sum_payment  IS 'Вьюшка с  запросом -  об оплате счетов и суммах оплаты';
-COMMENT ON TABLE contract_info  IS 'Вьюшка с  запросом -  о заключенных договорах на поставку и продажу товара';
-COMMENT ON TABLE product_for_order  IS 'Вьюшка с  запросом -  список заказываемых товаров';
-COMMENT ON TABLE product_for_stock  IS 'Вьюшка с  запросом -  о товарах, находящихся на складе';
-COMMENT ON TABLE product_give_away  IS 'Вьюшка с  запросом -  о поставленных и проданных товарах';
-COMMENT ON TABLE client_for_product  IS 'Вьюшка с  запросом - список клиентов по типу запрашиваемых товаров';
+COMMENT ON VIEW product_for_buying  IS 'Вьюшка с  запросом -  номенклатура предлагаемой на продажу продукции ';
+COMMENT ON VIEW score_not_payment  IS 'Вьюшка с  запросом -  о неоплаченных счетах';
+COMMENT ON VIEW score_sum_payment  IS 'Вьюшка с  запросом -  об оплате счетов и суммах оплаты';
+COMMENT ON VIEW contract_info  IS 'Вьюшка с  запросом -  о заключенных договорах на поставку и продажу товара';
+COMMENT ON VIEW product_for_order  IS 'Вьюшка с  запросом -  список заказываемых товаров';
+COMMENT ON VIEW product_for_stock  IS 'Вьюшка с  запросом -  о товарах, находящихся на складе';
+COMMENT ON VIEW product_give_away  IS 'Вьюшка с  запросом -  о поставленных и проданных товарах';
+COMMENT ON VIEW client_for_product  IS 'Вьюшка с  запросом - список клиентов по типу запрашиваемых товаров';
 
 
