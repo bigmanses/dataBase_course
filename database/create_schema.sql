@@ -1,9 +1,7 @@
 CREATE TABLE client
 (	
   id serial PRIMARY KEY,
-  name varchar(20) NOT NULL,
-  surname varchar(20) NOT NULL,
-  patronymic varchar(20),
+  name varchar(70) NOT NULL,
   phone varchar(15) NOT NULL,
   address varchar(50) NOT NULL,
   fax varchar(10),
@@ -25,7 +23,7 @@ CREATE TABLE product(
   name varchar(30) NOT NULL,
   characteristic varchar(50) NOT NULL,
   priceOne integer NOT NULL,
-  package varchar(40),
+  packages varchar(40),
   batchDelivery varchar(60),
   amount integer NOT NULL,
   manufacturer integer NOT NULL REFERENCES manufacturer(id)
