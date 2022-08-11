@@ -2,7 +2,13 @@ package com.bigmans.stock;
 
 
 import java.sql.*;
+import java.util.List;
 import java.util.Properties;
+
+import com.bigmans.stock.db.ClientService;
+import com.bigmans.stock.db.ManufacturerService;
+import com.bigmans.stock.domain.Client;
+import com.bigmans.stock.domain.Manufacturer;
 import com.bigmans.stock.ui.MainFrame;
 import com.formdev.flatlaf.FlatLightLaf;
 
@@ -29,20 +35,22 @@ public class MainApp {
             // Создание соединения с базой данных
             Connection connection = DriverManager.getConnection(url, authorization);
 
-            try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM client WHERE id = (?)")) {
+            try {
+                ManufacturerService manufacturerService = new ManufacturerService(connection);
+                Manufacturer manufacturer = new Manufacturer(-1, "Vasia", "Новгород", "Мансур", "София", "25352437215472");
+                print(manufacturerService.read());
+                manufacturerService.create(manufacturer);
 
-                statement.setInt(1, 1);
 
-                final ResultSet resultSet = statement.executeQuery();
-
-                if (resultSet.next()) {
-                    String byName = "login: " + resultSet.getString(2);
-                    String byIndex = "password: " + resultSet.getString(3);
-                    System.out.println(byName);
-                    System.out.println(byIndex);
-                }
             } finally {
                 connection.close();
             }
+    }
+
+    private static void print(List<Manufacturer> clients){
+        for(Manufacturer manufacturer: clients){
+            System.out.println("id:" + manufacturer.getId() + " name: " + manufacturer.getName());
+        }
+        System.out.println("///////////");
     }
 }
