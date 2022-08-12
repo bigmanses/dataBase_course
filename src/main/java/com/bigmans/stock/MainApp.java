@@ -6,10 +6,7 @@ import java.util.List;
 import java.util.Properties;
 
 import com.bigmans.stock.db.*;
-import com.bigmans.stock.domain.Client;
-import com.bigmans.stock.domain.Contract;
-import com.bigmans.stock.domain.Manufacturer;
-import com.bigmans.stock.domain.Product;
+import com.bigmans.stock.domain.*;
 import com.bigmans.stock.ui.MainFrame;
 import com.formdev.flatlaf.FlatLightLaf;
 
@@ -37,16 +34,17 @@ public class MainApp {
             Connection connection = DriverManager.getConnection(url, authorization);
 
             try {
-                Prototype<Contract> service = new ContractService(connection);
+                Prototype<Score> service = new ScoreService(connection);
                 //Client client = new Client(10, "Маркус", "+71231313712", "Попа", "3234728", "1234675432", "Обычный");
-                //Product product = new Product(4, "Футболка большая", "Размер XXL", 2000, "10", "От 5", 10);
+                Product product = new Product(4, "Футболка большая", "Размер XXL", 2000, "10", "От 5", 10);
                 //product.setManufacturerId(4);
-                System.currentTimeMillis();
-                Contract contract = new Contract(4, Date.valueOf("2022-08-13"), "Покупка 13 пар кроссовок",  13, "Заказ будет оплачен наличкой", 65000, true);
-                contract.setClientId(3);
-                contract.setProductId(1);
+//                Contract contract = new Contract(4, Date.valueOf("2022-08-13"), "Покупка 13 пар кроссовок",  13, "Заказ будет оплачен наличкой", 65000, true);
+//                contract.setClientId(3);
+//                contract.setProductId(1);
+                Score score = new Score(3, "Счет", "77777", Date.valueOf("2022-07-11"), 30000, true, true);
+                score.setContractId(5);
                 print(service.read());
-                service.delete(contract);
+                service.delete(score);
                 print(service.read());
                 //manufacturerService.create(manufacturer);G
 

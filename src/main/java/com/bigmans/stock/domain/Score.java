@@ -19,7 +19,7 @@ public class Score implements Model {
     @NotNull
     private Contract contract;
     @NotNull
-    private String date_score;
+    private java.sql.Date date_score;
     @NotNull
     private int sum;
     private boolean shipment_status;
@@ -39,5 +39,20 @@ public class Score implements Model {
         result = 31 * result + number.hashCode();
         result = 31 * result + contract.hashCode();
         return result;
+    }
+
+    public Score(@NotNull int id, @NotNull String name, @NotNull String number, @NotNull java.sql.Date date_score, @NotNull int sum, boolean shipment_status, boolean payment_status) {
+        this.id = id;
+        this.name = name;
+        this.number = number;
+        this.date_score = date_score;
+        this.sum = sum;
+        this.shipment_status = shipment_status;
+        this.payment_status = payment_status;
+    }
+
+    public void setContractId(int id) {
+        this.contract = new Contract();
+        this.contract.setId(id);
     }
 }
