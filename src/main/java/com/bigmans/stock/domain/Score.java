@@ -1,5 +1,6 @@
 package com.bigmans.stock.domain;
 
+import com.bigmans.stock.db.Model;
 import org.jetbrains.annotations.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Score {
+public class Score implements Model {
     @NotNull
     private int id;
     @NotNull

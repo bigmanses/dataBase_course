@@ -1,5 +1,6 @@
 package com.bigmans.stock.domain;
 
+import com.bigmans.stock.db.Model;
 import org.jetbrains.annotations.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Product {
+public class Product implements Model {
     @NotNull
     private int id;
     @NotNull
@@ -37,5 +38,20 @@ public class Product {
         result = 31 * result + name.hashCode();
         result = 31 * result + characteristic.hashCode();
         return result;
+    }
+
+    public void setManufacturerId(int id) {
+        this.manufacturer = new Manufacturer();
+        this.manufacturer.setId(id);
+    }
+
+    public Product(@NotNull int id, @NotNull String name, @NotNull String characteristic, @NotNull int priceOne, String packages, String batchDelivery, @NotNull int amount) {
+        this.id = id;
+        this.name = name;
+        this.characteristic = characteristic;
+        this.priceOne = priceOne;
+        this.packages = packages;
+        this.batchDelivery = batchDelivery;
+        this.amount = amount;
     }
 }

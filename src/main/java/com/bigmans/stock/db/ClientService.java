@@ -1,6 +1,7 @@
 package com.bigmans.stock.db;
 
 import com.bigmans.stock.domain.Client;
+import com.bigmans.stock.domain.Manufacturer;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
@@ -10,7 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClientService {
+public class ClientService implements Prototype<Client>{
 
     /** Соединение с нашей БД */
     @NotNull
@@ -25,27 +26,24 @@ public class ClientService {
      * @param client - новый экземпляр сущности, который мы хотим добавить в нашу базу
      * @return result - флаг успешного добавления строки в нашу таблицу
      */
-    public boolean create(@NotNull final Client client) {
-        boolean result = false;
-
-        try (PreparedStatement statement = connection.prepareStatement(SQLClient.INSERT.QUERY)) {
+    @Override
+    public  List<Integer> create(@NotNull final Client client) {
+        List<Integer> ids = SqlUtils.execSqlWithReturningId(SQLClient.INSERT.QUERY, (statement) -> {
             statement.setString(1,client.getName());
             statement.setString(2, client.getPhone());
             statement.setString(3, client.getAddress());
             statement.setString(4, client.getFax());
             statement.setString(5, client.getScore());
             statement.setString(6, client.getNotes());
-            result = statement.executeQuery().next();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return result;
+        }, connection);
+        return ids;
     }
 
     /**
      * Чтение таблицы из БД
      * @return все клиенты
      */
+    @Override
     public List<Client> read() {
         List<Client> clients = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement(SQLClient.GET.QUERY)) {
@@ -72,19 +70,16 @@ public class ClientService {
      * @param client - наш экземпляр сущности, который мы хотим отредактировать
      * @return result -  флаг успешного редактирования строки в нашей таблице
      */
+    @Override
     public boolean update(@NotNull final Client client) {
-        boolean result = false;
 
-        try (PreparedStatement statement = connection.prepareStatement(SQLClient.UPDATE.QUERY)) {
+        List<Integer> ids = SqlUtils.execSqlWithReturningId(SQLClient.UPDATE.QUERY, (statement) -> {
             statement.setString(1, client.getName());
             statement.setString(2, client.getPhone());
             statement.setString(3, client.getAddress());
             statement.setInt(4, client.getId());
-            result = statement.executeQuery().next();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return result;
+        }, connection);
+        return ids.size() > 0;
     }
 
     /**
@@ -92,18 +87,14 @@ public class ClientService {
      * @param client - наш экземпляр сущности, который мы хотим удалить
      * @return result -  флаг успешного редактирования строки в нашей таблице
      */
+    @Override
     public boolean delete(@NotNull final Client client) {
-        boolean result = false;
-
-        try (PreparedStatement statement = connection.prepareStatement(SQLClient.DELETE.QUERY)) {
+        List<Integer> ids = SqlUtils.execSqlWithReturningId(SQLClient.DELETE.QUERY, (statement) -> {
             statement.setString(1, client.getName());
             statement.setString(2, client.getPhone());
             statement.setString(3, client.getAddress());
-            result = statement.executeQuery().next();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return result;
+        }, connection);
+        return ids.size() > 0;
     }
 
     /**

@@ -5,10 +5,11 @@ import java.sql.*;
 import java.util.List;
 import java.util.Properties;
 
-import com.bigmans.stock.db.ClientService;
-import com.bigmans.stock.db.ManufacturerService;
+import com.bigmans.stock.db.*;
 import com.bigmans.stock.domain.Client;
+import com.bigmans.stock.domain.Contract;
 import com.bigmans.stock.domain.Manufacturer;
+import com.bigmans.stock.domain.Product;
 import com.bigmans.stock.ui.MainFrame;
 import com.formdev.flatlaf.FlatLightLaf;
 
@@ -36,10 +37,18 @@ public class MainApp {
             Connection connection = DriverManager.getConnection(url, authorization);
 
             try {
-                ManufacturerService manufacturerService = new ManufacturerService(connection);
-                Manufacturer manufacturer = new Manufacturer(-1, "Vasia", "Новгород", "Мансур", "София", "25352437215472");
-                print(manufacturerService.read());
-                manufacturerService.create(manufacturer);
+                Prototype<Contract> service = new ContractService(connection);
+                //Client client = new Client(10, "Маркус", "+71231313712", "Попа", "3234728", "1234675432", "Обычный");
+                //Product product = new Product(4, "Футболка большая", "Размер XXL", 2000, "10", "От 5", 10);
+                //product.setManufacturerId(4);
+                System.currentTimeMillis();
+                Contract contract = new Contract(4, Date.valueOf("2022-08-13"), "Покупка 13 пар кроссовок",  13, "Заказ будет оплачен наличкой", 65000, true);
+                contract.setClientId(3);
+                contract.setProductId(1);
+                print(service.read());
+                service.delete(contract);
+                print(service.read());
+                //manufacturerService.create(manufacturer);G
 
 
             } finally {
@@ -47,9 +56,9 @@ public class MainApp {
             }
     }
 
-    private static void print(List<Manufacturer> clients){
-        for(Manufacturer manufacturer: clients){
-            System.out.println("id:" + manufacturer.getId() + " name: " + manufacturer.getName());
+    private static <T extends Model> void print(List<T> models){
+        for(Model model: models){
+            System.out.println("id:" + model.getId() + " name: " + model.getName());
         }
         System.out.println("///////////");
     }
