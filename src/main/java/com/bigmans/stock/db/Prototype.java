@@ -7,4 +7,5 @@ public interface Prototype<Entity> {
     List<Entity> read();
     boolean update(Entity model);
     boolean delete(Entity model);
+    Entity getId(int id);
 }

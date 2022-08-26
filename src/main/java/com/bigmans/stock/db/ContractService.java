@@ -1,5 +1,6 @@
 package com.bigmans.stock.db;
 
+import com.bigmans.stock.domain.Client;
 import com.bigmans.stock.domain.Contract;
 import com.bigmans.stock.domain.Product;
 import org.jetbrains.annotations.NotNull;
@@ -41,6 +42,23 @@ public class ContractService implements Prototype<Contract> {
         return ids;
     }
 
+    /** Поиск контрактов по id
+     * @param id - id клиента
+     * @return найденный контракт
+     */
+    @Override
+    public Contract getId(int id) {
+        try (PreparedStatement statement = connection.prepareStatement(SqlContract.GET_ID.QUERY)) {
+            statement.setInt(1, id);
+            final ResultSet rs = statement.executeQuery();
+            rs.next();
+            return createOneContract(rs);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     /**
      * Чтение таблицы из БД
      * @return все клиенты
@@ -51,22 +69,30 @@ public class ContractService implements Prototype<Contract> {
         try (PreparedStatement statement = connection.prepareStatement(SqlContract.GET.QUERY)) {
             final ResultSet rs = statement.executeQuery();
             while(rs.next()){
-                Contract result = new Contract();
-                result.setId(Integer.parseInt(rs.getString(1)));
-                result.setDate_contract(rs.getDate(2));
-                result.setAbout(rs.getString(3));
-                result.setProductId(rs.getInt(4));
-                result.setAmount(rs.getInt(5));
-                result.setTerms(rs.getString(6));
-                result.setClientId(rs.getInt(7));
-                result.setPrice(rs.getInt(8));
-                result.setSale(rs.getBoolean(9));
-                contracts.add(result);
+                contracts.add(createOneContract(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return contracts;
+    }
+
+    /** Создание одного контракта
+     * @param rs - результат, полученный из базы
+     * @return result - наш созданный контракт
+     * */
+    private Contract createOneContract(ResultSet rs) throws SQLException {
+        Contract result = new Contract();
+        result.setId(Integer.parseInt(rs.getString(1)));
+        result.setDate_contract(rs.getDate(2));
+        result.setAbout(rs.getString(3));
+        result.setProductId(rs.getInt(4));
+        result.setAmount(rs.getInt(5));
+        result.setTerms(rs.getString(6));
+        result.setClientId(rs.getInt(7));
+        result.setPrice(rs.getInt(8));
+        result.setSale(rs.getBoolean(9));
+        return result;
     }
 
     /**
@@ -107,6 +133,7 @@ public class ContractService implements Prototype<Contract> {
      */
     public enum SqlContract {
         GET("SELECT* from contract"),
+        GET_ID("SELECT* from contract WHERE contract.id = (?)" ),
         INSERT("INSERT INTO contract VALUES (DEFAULT, (?), (?), (?), (?), (?), (?), (?), (?)) RETURNING id"),
         DELETE("DELETE FROM contract WHERE  date_contract = (?) AND  product = (?) AND client = (?) AND id = (?) RETURNING id"),
         UPDATE("UPDATE contract SET date_contract = (?), amount = (?), terms = (?), price = (?) WHERE id = (?) RETURNING id");

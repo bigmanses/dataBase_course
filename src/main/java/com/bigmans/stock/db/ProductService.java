@@ -20,6 +20,23 @@ public class ProductService implements Prototype<Product> {
         this.connection = connection;
     }
 
+    /** Поиск продукта по id
+     * @param id - id продукта
+     * @return найденный продукт
+     */
+    @Override
+    public Product getId(int id) {
+        try (PreparedStatement statement = connection.prepareStatement(SqlProduct.GET_ID.QUERY)) {
+            statement.setInt(1, id);
+            final ResultSet rs = statement.executeQuery();
+            rs.next();
+            return createOneProduct(rs);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     /**
      * Создание и добавление строки в наш столбец
      * @param product - новый экземпляр сущности, который мы хотим добавить в нашу базу
@@ -49,21 +66,29 @@ public class ProductService implements Prototype<Product> {
         try (PreparedStatement statement = connection.prepareStatement(SqlProduct.GET.QUERY)) {
             final ResultSet rs = statement.executeQuery();
             while(rs.next()){
-                Product result = new Product();
-                result.setId(Integer.parseInt(rs.getString(1)));
-                result.setName(rs.getString(2));
-                result.setCharacteristic(rs.getString(3));
-                result.setPriceOne(rs.getInt(4));
-                result.setPackages(rs.getString(5));
-                result.setBatchDelivery(rs.getString(6));
-                result.setAmount(rs.getInt(7));
-                result.setManufacturerId(rs.getInt(8));
-                products.add(result);
+                products.add(createOneProduct(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return products;
+    }
+
+    /** Создание одного продукта
+     * @param rs - результат, полученный из базы
+     * @return result - наш созданный продукт
+     * */
+    private Product createOneProduct(ResultSet rs) throws SQLException {
+        Product result = new Product();
+        result.setId(Integer.parseInt(rs.getString(1)));
+        result.setName(rs.getString(2));
+        result.setCharacteristic(rs.getString(3));
+        result.setPriceOne(rs.getInt(4));
+        result.setPackages(rs.getString(5));
+        result.setBatchDelivery(rs.getString(6));
+        result.setAmount(rs.getInt(7));
+        result.setManufacturerId(rs.getInt(8));
+        return result;
     }
 
     /**
@@ -105,6 +130,7 @@ public class ProductService implements Prototype<Product> {
      */
     public enum SqlProduct {
         GET("SELECT* from product"),
+        GET_ID("SELECT* from product WHERE product.id = (?)" ),
         INSERT("INSERT INTO product VALUES (DEFAULT, (?), (?), (?), (?), (?), (?), (?)) RETURNING id"),
         DELETE("DELETE FROM product WHERE  name = (?) AND  manufacturer = (?) AND priceOne = (?) AND id = (?) RETURNING id"),
         UPDATE("UPDATE product SET name = (?), characteristic = (?), priceOne = (?), amount = (?) WHERE id = (?) RETURNING id");

@@ -1,6 +1,7 @@
 package com.bigmans.stock.db;
 
 import com.bigmans.stock.domain.Contract;
+import com.bigmans.stock.domain.Product;
 import com.bigmans.stock.domain.Score;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,6 +19,23 @@ public class ScoreService implements Prototype<Score> {
 
     public ScoreService(final Connection connection) {
         this.connection = connection;
+    }
+
+    /** Поиск продукта по id
+     * @param id - id продукта
+     * @return найденный продукт
+     */
+    @Override
+    public Score getId(int id) {
+        try (PreparedStatement statement = connection.prepareStatement(SqlScore.GET_ID.QUERY)) {
+            statement.setInt(1, id);
+            final ResultSet rs = statement.executeQuery();
+            rs.next();
+            return createOneScore(rs);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -49,21 +67,29 @@ public class ScoreService implements Prototype<Score> {
         try (PreparedStatement statement = connection.prepareStatement(SqlScore.GET.QUERY)) {
             final ResultSet rs = statement.executeQuery();
             while(rs.next()){
-                Score result = new Score();
-                result.setId(Integer.parseInt(rs.getString(1)));
-                result.setName(rs.getString(2));
-                result.setNumber(rs.getString(3));
-                result.setContractId(rs.getInt(4));
-                result.setDate_score(rs.getDate(5));
-                result.setSum(rs.getInt(6));
-                result.setShipment_status(rs.getBoolean(7));
-                result.setPayment_status(rs.getBoolean(8));
-                scores.add(result);
+                scores.add(createOneScore(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return scores;
+    }
+
+    /** Создание одного счета
+     * @param rs - результат, полученный из базы
+     * @return result - наш созданный счет
+     * */
+    private Score createOneScore(ResultSet rs) throws SQLException {
+        Score result = new Score();
+        result.setId(Integer.parseInt(rs.getString(1)));
+        result.setName(rs.getString(2));
+        result.setNumber(rs.getString(3));
+        result.setContractId(rs.getInt(4));
+        result.setDate_score(rs.getDate(5));
+        result.setSum(rs.getInt(6));
+        result.setShipment_status(rs.getBoolean(7));
+        result.setPayment_status(rs.getBoolean(8));
+        return result;
     }
 
     /**
@@ -103,6 +129,7 @@ public class ScoreService implements Prototype<Score> {
      */
     public enum SqlScore {
         GET("SELECT* from score"),
+        GET_ID("SELECT* from score WHERE score.id = (?)" ),
         INSERT("INSERT INTO score VALUES (DEFAULT, (?), (?), (?), (?), (?), (?), (?)) RETURNING id"),
         DELETE("DELETE FROM score WHERE  name = (?) AND number = (?) AND contract = (?) AND id = (?) RETURNING id"),
         UPDATE("UPDATE score SET sum = (?), shipment_status = (?), payment_status = (?) WHERE id = (?) RETURNING id");

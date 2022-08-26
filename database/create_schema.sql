@@ -70,7 +70,7 @@ AS
 
 CREATE OR REPLACE VIEW score_sum_payment
 AS
-   SELECT id, name, number, sum, payment_status FROM score;
+   SELECT id, name, number, contract, sum, payment_status FROM score;
 
 CREATE OR REPLACE VIEW contract_info
    AS
@@ -96,7 +96,7 @@ CREATE OR REPLACE VIEW client_for_product
    AS
       SELECT DISTINCT client.* FROM contract JOIN client ON contract.client = client.id
        JOIN product ON contract.product = product.id  JOIN manufacturer ON product.manufacturer = manufacturer.id
-       WHERE product.name = 'adidas  crazychaos 2.0 ';
+       WHERE product.name = 'Джинсы бананы';
 
 CREATE INDEX product_name_index ON product (name);
 CREATE INDEX score_payment_index on score (payment_status, sum);

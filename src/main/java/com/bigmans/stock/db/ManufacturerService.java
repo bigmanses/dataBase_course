@@ -1,5 +1,6 @@
 package com.bigmans.stock.db;
 
+import com.bigmans.stock.domain.Contract;
 import com.bigmans.stock.domain.Manufacturer;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,6 +15,23 @@ public class ManufacturerService implements Prototype<Manufacturer>{
 
     public ManufacturerService(final Connection connection) {
         this.connection = connection;
+    }
+
+    /** Поиск производителей по id
+     * @param id - id производителя
+     * @return найденный производитель
+     */
+    @Override
+    public Manufacturer getId(int id) {
+        try (PreparedStatement statement = connection.prepareStatement(SqlManufacturer.GET_ID.QUERY)) {
+            statement.setInt(1, id);
+            final ResultSet rs = statement.executeQuery();
+            rs.next();
+            return createOneManufacturer(rs);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -33,6 +51,21 @@ public class ManufacturerService implements Prototype<Manufacturer>{
         return ids;
     }
 
+    /** Создание одного производителя
+     * @param rs - результат, полученный из базы
+     * @return result - наш созданный производитель
+     * */
+    private Manufacturer createOneManufacturer(ResultSet rs) throws SQLException {
+        Manufacturer result = new Manufacturer();
+        result.setId(Integer.parseInt(rs.getString(1)));
+        result.setName(rs.getString(2));
+        result.setAddress(rs.getString(3));
+        result.setDirector(rs.getString(4));
+        result.setAccountant(rs.getString(5));
+        result.setRequisites(rs.getString(6));
+        return result;
+    }
+
     /**
      * Чтение таблицы из БД
      * @return все клиенты
@@ -43,14 +76,7 @@ public class ManufacturerService implements Prototype<Manufacturer>{
         try (PreparedStatement statement = connection.prepareStatement(SqlManufacturer.GET.QUERY)) {
             final ResultSet rs = statement.executeQuery();
             while(rs.next()){
-                Manufacturer result = new Manufacturer();
-                result.setId(Integer.parseInt(rs.getString(1)));
-                result.setName(rs.getString(2));
-                result.setAddress(rs.getString(3));
-                result.setDirector(rs.getString(4));
-                result.setAccountant(rs.getString(5));
-                result.setRequisites(rs.getString(6));
-                manufacturers.add(result);
+                manufacturers.add(createOneManufacturer(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -96,6 +122,7 @@ public class ManufacturerService implements Prototype<Manufacturer>{
      */
     public enum SqlManufacturer {
         GET("SELECT* from manufacturer"),
+        GET_ID("SELECT* from manufacturer WHERE manufacturer.id = (?)" ),
         INSERT("INSERT INTO manufacturer VALUES (DEFAULT, (?), (?), (?), (?), (?)) RETURNING id"),
         DELETE("DELETE FROM manufacturer WHERE  name = (?) AND address = (?) AND director = (?) AND id = (?) RETURNING id"),
         UPDATE("UPDATE manufacturer SET name = (?), address = (?), director = (?) WHERE id = (?) RETURNING id");

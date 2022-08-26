@@ -39,6 +39,24 @@ public class ClientService implements Prototype<Client>{
         return ids;
     }
 
+
+    /** Поиск клиентов по id
+     * @param id - id клиента
+     * @return найденный клиент
+     */
+    @Override
+    public Client getId(int id) {
+        try (PreparedStatement statement = connection.prepareStatement(SQLClient.GET_ID.QUERY)) {
+            statement.setInt(1, id);
+            final ResultSet rs = statement.executeQuery();
+            rs.next();
+            return createOneClient(rs);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     /**
      * Чтение таблицы из БД
      * @return все клиенты
@@ -49,20 +67,28 @@ public class ClientService implements Prototype<Client>{
         try (PreparedStatement statement = connection.prepareStatement(SQLClient.GET.QUERY)) {
             final ResultSet rs = statement.executeQuery();
             while(rs.next()){
-                Client result = new Client();
-                result.setId(Integer.parseInt(rs.getString(1)));
-                result.setName(rs.getString(2));
-                result.setPhone(rs.getString(3));
-                result.setAddress(rs.getString(4));
-                result.setFax(rs.getString(5));
-                result.setScore(rs.getString(6));
-                result.setNotes(rs.getString(7));
-                clients.add(result);
+                clients.add(createOneClient(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return clients;
+    }
+
+    /** Создание одного клиента
+     * @param rs - результат, полученный из базы
+     * @return result - наш созданный клиент
+     * */
+    private Client createOneClient(ResultSet rs) throws SQLException {
+        Client result = new Client();
+        result.setId(Integer.parseInt(rs.getString(1)));
+        result.setName(rs.getString(2));
+        result.setPhone(rs.getString(3));
+        result.setAddress(rs.getString(4));
+        result.setFax(rs.getString(5));
+        result.setScore(rs.getString(6));
+        result.setNotes(rs.getString(7));
+        return result;
     }
 
     /**
@@ -102,6 +128,7 @@ public class ClientService implements Prototype<Client>{
      */
     public enum SQLClient {
         GET("SELECT* from client"),
+        GET_ID("SELECT* from client WHERE client.id = (?)" ),
         INSERT("INSERT INTO client VALUES (DEFAULT, (?), (?), (?), (?), (?), (?)) RETURNING id"),
         DELETE("DELETE FROM client WHERE  name = (?) AND phone = (?) AND address = (?) RETURNING id"),
         UPDATE("UPDATE client SET name = (?), phone = (?), address = (?) WHERE id = (?) RETURNING id");
