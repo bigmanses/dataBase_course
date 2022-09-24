@@ -69,6 +69,7 @@ public class ScoreService implements Prototype<Score> {
             while(rs.next()){
                 scores.add(createOneScore(rs));
             }
+            rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -89,6 +90,7 @@ public class ScoreService implements Prototype<Score> {
         result.setSum(rs.getInt(6));
         result.setShipment_status(rs.getBoolean(7));
         result.setPayment_status(rs.getBoolean(8));
+        rs.close();
         return result;
     }
 

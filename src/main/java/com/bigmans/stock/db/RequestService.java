@@ -45,6 +45,7 @@ public class RequestService {
                 result.setManufacturerId(rs.getInt(8));
                 products.add(result);
             }
+            rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -71,6 +72,7 @@ public class RequestService {
                 result.setPayment_status(rs.getBoolean(8));
                 scores.add(result);
             }
+            rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -95,6 +97,7 @@ public class RequestService {
                 result.setPayment_status(rs.getBoolean(6));
                 scores.add(result);
             }
+            rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -122,6 +125,7 @@ public class RequestService {
                 result.getManufacturer().setName(rs.getString(9));
                 products.add(result);
             }
+            rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -149,6 +153,7 @@ public class RequestService {
                 result.getManufacturer().setName(rs.getString(9));
                 products.add(result);
             }
+            rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -176,6 +181,7 @@ public class RequestService {
                 result.getManufacturer().setName(rs.getString(9));
                 products.add(result);
             }
+            rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -202,6 +208,7 @@ public class RequestService {
                 result.setNotes(rs.getString(7));
                 clients.add(result);
             }
+            rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

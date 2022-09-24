@@ -69,6 +69,7 @@ public class ClientService implements Prototype<Client>{
             while(rs.next()){
                 clients.add(createOneClient(rs));
             }
+            rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -88,6 +89,7 @@ public class ClientService implements Prototype<Client>{
         result.setFax(rs.getString(5));
         result.setScore(rs.getString(6));
         result.setNotes(rs.getString(7));
+        rs.close();
         return result;
     }
 

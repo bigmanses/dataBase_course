@@ -63,6 +63,7 @@ public class ManufacturerService implements Prototype<Manufacturer>{
         result.setDirector(rs.getString(4));
         result.setAccountant(rs.getString(5));
         result.setRequisites(rs.getString(6));
+        rs.close();
         return result;
     }
 
@@ -78,6 +79,7 @@ public class ManufacturerService implements Prototype<Manufacturer>{
             while(rs.next()){
                 manufacturers.add(createOneManufacturer(rs));
             }
+            rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

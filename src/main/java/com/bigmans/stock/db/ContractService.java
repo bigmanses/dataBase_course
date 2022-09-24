@@ -71,6 +71,7 @@ public class ContractService implements Prototype<Contract> {
             while(rs.next()){
                 contracts.add(createOneContract(rs));
             }
+            rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -92,6 +93,7 @@ public class ContractService implements Prototype<Contract> {
         result.setClientId(rs.getInt(7));
         result.setPrice(rs.getInt(8));
         result.setSale(rs.getBoolean(9));
+        rs.close();
         return result;
     }
 

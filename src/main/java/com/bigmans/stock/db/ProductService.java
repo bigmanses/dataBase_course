@@ -68,6 +68,7 @@ public class ProductService implements Prototype<Product> {
             while(rs.next()){
                 products.add(createOneProduct(rs));
             }
+            rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -88,6 +89,7 @@ public class ProductService implements Prototype<Product> {
         result.setBatchDelivery(rs.getString(6));
         result.setAmount(rs.getInt(7));
         result.setManufacturerId(rs.getInt(8));
+        rs.close();
         return result;
     }
 
