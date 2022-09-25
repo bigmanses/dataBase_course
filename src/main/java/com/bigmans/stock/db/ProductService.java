@@ -44,6 +44,11 @@ public class ProductService implements Prototype<Product> {
         return null;
     }
 
+    @Override
+    public Connection getConnect() {
+        return connection;
+    }
+
     /**
      * Создание и добавление строки в наш столбец
      * @param product - новый экземпляр сущности, который мы хотим добавить в нашу базу
@@ -133,9 +138,7 @@ public class ProductService implements Prototype<Product> {
     public boolean delete(@NotNull final Product product) {
         List<Integer> ids = SqlUtils.execSqlWithReturningId(SqlProduct.DELETE.QUERY, (statement) -> {
             statement.setString(1, product.getName());
-            statement.setInt(2, product.getManufacturer().getId());
-            statement.setInt(3, product.getPriceOne());
-            statement.setInt(4, product.getId());
+            statement.setInt(2, product.getPriceOne());
         }, connection);
         return ids.size() > 0;
     }
@@ -147,7 +150,7 @@ public class ProductService implements Prototype<Product> {
         GET("SELECT* from product"),
         GET_ID("SELECT* from product WHERE product.id = (?)" ),
         INSERT("INSERT INTO product VALUES (DEFAULT, (?), (?), (?), (?), (?), (?), (?)) RETURNING id"),
-        DELETE("DELETE FROM product WHERE  name = (?) AND  manufacturer = (?) AND priceOne = (?) AND id = (?) RETURNING id"),
+        DELETE("DELETE FROM product WHERE  name = (?) AND priceOne = (?) RETURNING id"),
         UPDATE("UPDATE product SET name = (?), characteristic = (?), priceOne = (?), amount = (?) WHERE id = (?) RETURNING id");
 
         final String QUERY;

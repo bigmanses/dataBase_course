@@ -45,6 +45,11 @@ public class ScoreService implements Prototype<Score> {
         return null;
     }
 
+    @Override
+    public Connection getConnect() {
+        return connection;
+    }
+
     /**
      * Создание и добавление строки в наш столбец
      * @param score - новый экземпляр сущности, который мы хотим добавить в нашу базу
@@ -134,7 +139,6 @@ public class ScoreService implements Prototype<Score> {
             statement.setString(1, score.getName());
             statement.setString(2, score.getNumber());
             statement.setInt(3, score.getContract().getId());
-            statement.setInt(4, score.getId());
         }, connection);
         return ids.size() > 0;
     }
@@ -146,7 +150,7 @@ public class ScoreService implements Prototype<Score> {
         GET("SELECT* from score"),
         GET_ID("SELECT* from score WHERE score.id = (?)" ),
         INSERT("INSERT INTO score VALUES (DEFAULT, (?), (?), (?), (?), (?), (?), (?)) RETURNING id"),
-        DELETE("DELETE FROM score WHERE  name = (?) AND number = (?) AND contract = (?) AND id = (?) RETURNING id"),
+        DELETE("DELETE FROM score WHERE  name = (?) AND number = (?) AND contract = (?) RETURNING id"),
         UPDATE("UPDATE score SET sum = (?), shipment_status = (?), payment_status = (?) WHERE id = (?) RETURNING id");
 
         final String QUERY;

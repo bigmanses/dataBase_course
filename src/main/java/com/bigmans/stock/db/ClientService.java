@@ -65,6 +65,11 @@ public class ClientService implements Prototype<Client>{
         return null;
     }
 
+    @Override
+    public Connection getConnect() {
+        return connection;
+    }
+
     /**
      * Чтение таблицы из БД
      * @return все клиенты

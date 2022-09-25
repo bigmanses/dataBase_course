@@ -66,6 +66,11 @@ public class ContractService implements Prototype<Contract> {
         return null;
     }
 
+    @Override
+    public Connection getConnect() {
+        return connection;
+    }
+
     /**
      * Чтение таблицы из БД
      * @return все клиенты
@@ -138,7 +143,6 @@ public class ContractService implements Prototype<Contract> {
             statement.setDate(1, contract.getDate_contract());
             statement.setInt(2, contract.getProduct().getId());
             statement.setInt(3, contract.getClient().getId());
-            statement.setInt(4, contract.getId());
         }, connection);
         return ids.size() > 0;
     }
@@ -150,7 +154,7 @@ public class ContractService implements Prototype<Contract> {
         GET("SELECT* from contract"),
         GET_ID("SELECT* from contract WHERE contract.id = (?)" ),
         INSERT("INSERT INTO contract VALUES (DEFAULT, (?), (?), (?), (?), (?), (?), (?), (?)) RETURNING id"),
-        DELETE("DELETE FROM contract WHERE  date_contract = (?) AND  product = (?) AND client = (?) AND id = (?) RETURNING id"),
+        DELETE("DELETE FROM contract WHERE  date_contract = (?) AND  product = (?) AND client = (?)  RETURNING id"),
         UPDATE("UPDATE contract SET date_contract = (?), amount = (?), terms = (?), price = (?) WHERE id = (?) RETURNING id");
 
         final String QUERY;

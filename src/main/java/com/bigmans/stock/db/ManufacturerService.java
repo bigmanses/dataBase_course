@@ -41,6 +41,11 @@ public class ManufacturerService implements Prototype<Manufacturer>{
         return null;
     }
 
+    @Override
+    public Connection getConnect() {
+        return connection;
+    }
+
     /**
      * Создание и добавление строки в наш столбец
      * @param manufacturer - новый экземпляр сущности, который мы хотим добавить в нашу базу
@@ -126,7 +131,6 @@ public class ManufacturerService implements Prototype<Manufacturer>{
             statement.setString(1, manufacturer.getName());
             statement.setString(2, manufacturer.getAddress());
             statement.setString(3, manufacturer.getDirector());
-            statement.setInt(4, manufacturer.getId());
         }, connection);
         return ids.size() > 0;
     }
@@ -138,7 +142,7 @@ public class ManufacturerService implements Prototype<Manufacturer>{
         GET("SELECT* from manufacturer"),
         GET_ID("SELECT* from manufacturer WHERE manufacturer.id = (?)" ),
         INSERT("INSERT INTO manufacturer VALUES (DEFAULT, (?), (?), (?), (?), (?)) RETURNING id"),
-        DELETE("DELETE FROM manufacturer WHERE  name = (?) AND address = (?) AND director = (?) AND id = (?) RETURNING id"),
+        DELETE("DELETE FROM manufacturer WHERE  name = (?) AND address = (?) AND director = (?)  RETURNING id"),
         UPDATE("UPDATE manufacturer SET name = (?), address = (?), director = (?) WHERE id = (?) RETURNING id");
 
         final String QUERY;

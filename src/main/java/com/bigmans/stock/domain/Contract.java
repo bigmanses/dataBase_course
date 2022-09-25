@@ -12,19 +12,13 @@ import java.sql.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Contract implements Model {
-    @NotNull
     private int id;
-    @NotNull
     private java.sql.Date date_contract;
     private String about;
-    @NotNull
     private Product product;
-    @NotNull
     private int amount;
     private String terms;
-    @NotNull
     private Client client;
-    @NotNull
     private int price;
     private boolean isSale;
 
