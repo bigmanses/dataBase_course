@@ -26,13 +26,20 @@ public class ProductService implements Prototype<Product> {
      */
     @Override
     public Product getId(int id) {
+        ResultSet rs = null;
         try (PreparedStatement statement = connection.prepareStatement(SqlProduct.GET_ID.QUERY)) {
             statement.setInt(1, id);
-            final ResultSet rs = statement.executeQuery();
+            rs = statement.executeQuery();
             rs.next();
             return createOneProduct(rs);
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                rs.close();
+            } catch (Exception ignore){
+
+            }
         }
         return null;
     }
@@ -62,15 +69,22 @@ public class ProductService implements Prototype<Product> {
      */
     @Override
     public List<Product> read() {
+        ResultSet rs = null;
         List<Product> products = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement(SqlProduct.GET.QUERY)) {
-            final ResultSet rs = statement.executeQuery();
+           rs = statement.executeQuery();
             while(rs.next()){
                 products.add(createOneProduct(rs));
             }
             rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                rs.close();
+            } catch (Exception ignore){
+
+            }
         }
         return products;
     }
@@ -89,7 +103,6 @@ public class ProductService implements Prototype<Product> {
         result.setBatchDelivery(rs.getString(6));
         result.setAmount(rs.getInt(7));
         result.setManufacturerId(rs.getInt(8));
-        rs.close();
         return result;
     }
 

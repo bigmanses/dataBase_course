@@ -23,13 +23,20 @@ public class ManufacturerService implements Prototype<Manufacturer>{
      */
     @Override
     public Manufacturer getId(int id) {
+        ResultSet rs = null;
         try (PreparedStatement statement = connection.prepareStatement(SqlManufacturer.GET_ID.QUERY)) {
             statement.setInt(1, id);
-            final ResultSet rs = statement.executeQuery();
+            rs = statement.executeQuery();
             rs.next();
             return createOneManufacturer(rs);
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                rs.close();
+            } catch (Exception ignore){
+
+            }
         }
         return null;
     }
@@ -63,7 +70,6 @@ public class ManufacturerService implements Prototype<Manufacturer>{
         result.setDirector(rs.getString(4));
         result.setAccountant(rs.getString(5));
         result.setRequisites(rs.getString(6));
-        rs.close();
         return result;
     }
 
@@ -73,15 +79,21 @@ public class ManufacturerService implements Prototype<Manufacturer>{
      */
     @Override
     public List<Manufacturer> read() {
+        ResultSet rs = null;
         List<Manufacturer> manufacturers = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement(SqlManufacturer.GET.QUERY)) {
-            final ResultSet rs = statement.executeQuery();
+            rs = statement.executeQuery();
             while(rs.next()){
                 manufacturers.add(createOneManufacturer(rs));
             }
-            rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                rs.close();
+            } catch (Exception ignore){
+
+            }
         }
         return manufacturers;
     }

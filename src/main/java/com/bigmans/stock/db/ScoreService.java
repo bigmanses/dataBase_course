@@ -27,13 +27,20 @@ public class ScoreService implements Prototype<Score> {
      */
     @Override
     public Score getId(int id) {
+        ResultSet rs = null;
         try (PreparedStatement statement = connection.prepareStatement(SqlScore.GET_ID.QUERY)) {
             statement.setInt(1, id);
-            final ResultSet rs = statement.executeQuery();
+            rs = statement.executeQuery();
             rs.next();
             return createOneScore(rs);
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                rs.close();
+            } catch (Exception ignore){
+
+            }
         }
         return null;
     }
@@ -63,15 +70,22 @@ public class ScoreService implements Prototype<Score> {
      */
     @Override
     public List<Score> read() {
+        ResultSet rs = null;
         List<Score> scores = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement(SqlScore.GET.QUERY)) {
-            final ResultSet rs = statement.executeQuery();
+            rs = statement.executeQuery();
             while(rs.next()){
                 scores.add(createOneScore(rs));
             }
             rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                rs.close();
+            } catch (Exception ignore){
+
+            }
         }
         return scores;
     }
@@ -90,7 +104,6 @@ public class ScoreService implements Prototype<Score> {
         result.setSum(rs.getInt(6));
         result.setShipment_status(rs.getBoolean(7));
         result.setPayment_status(rs.getBoolean(8));
-        rs.close();
         return result;
     }
 

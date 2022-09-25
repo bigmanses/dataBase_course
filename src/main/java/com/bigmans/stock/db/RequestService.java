@@ -30,9 +30,10 @@ public class RequestService {
      * @return все продукты
      */
     public List<Product> getProductBuying() {
+        ResultSet rs = null;
         List<Product> products = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement(SQLRequest.GET_PRODUCT_FOR_BUYING.QUERY)) {
-            final ResultSet rs = statement.executeQuery();
+            rs = statement.executeQuery();
             while(rs.next()){
                 Product result = new Product();
                 result.setId(Integer.parseInt(rs.getString(1)));
@@ -48,6 +49,12 @@ public class RequestService {
             rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                rs.close();
+            } catch (Exception ignore){
+
+            }
         }
         return products;
     }
@@ -58,8 +65,9 @@ public class RequestService {
      */
     public List<Score> getScoreNotPayment(){
         List<Score> scores = new ArrayList<>();
+        ResultSet rs = null;
         try (PreparedStatement statement = connection.prepareStatement(SQLRequest.GET_SCORE_NOT_PAYMENT.QUERY)) {
-            final ResultSet rs = statement.executeQuery();
+            rs = statement.executeQuery();
             while(rs.next()){
                 Score result = new Score();
                 result.setId(Integer.parseInt(rs.getString(1)));
@@ -75,6 +83,12 @@ public class RequestService {
             rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                rs.close();
+            } catch (Exception ignore){
+
+            }
         }
         return scores;
     }
@@ -84,9 +98,10 @@ public class RequestService {
      * @return все счета
      */
     public List<Score> getScoreSumPayment(){
+        ResultSet rs = null;
         List<Score> scores = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement(SQLRequest.GET_SCORE_SUM_PAYMENT.QUERY)) {
-            final ResultSet rs = statement.executeQuery();
+            rs = statement.executeQuery();
             while(rs.next()){
                 Score result = new Score();
                 result.setId(Integer.parseInt(rs.getString(1)));
@@ -100,6 +115,12 @@ public class RequestService {
             rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                rs.close();
+            } catch (Exception ignore){
+
+            }
         }
         return scores;
     }
@@ -109,9 +130,10 @@ public class RequestService {
      * @return все клиенты
      */
     public List<Product> getProductForOrder(){
+        ResultSet rs = null;
         List<Product> products = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement(SQLRequest.GET_PRODUCT_FOR_ORDER.QUERY)) {
-            final ResultSet rs = statement.executeQuery();
+            rs = statement.executeQuery();
             while(rs.next()){
                 Product result = new Product();
                 result.setId(Integer.parseInt(rs.getString(1)));
@@ -128,6 +150,12 @@ public class RequestService {
             rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                rs.close();
+            } catch (Exception ignore){
+
+            }
         }
         return products;
     }
@@ -138,8 +166,9 @@ public class RequestService {
      */
     public List<Product> getProductForStock(){
         List<Product> products = new ArrayList<>();
+        ResultSet rs = null;
         try (PreparedStatement statement = connection.prepareStatement(SQLRequest.GET_PRODUCT_FOR_STOCK.QUERY)) {
-            final ResultSet rs = statement.executeQuery();
+            rs = statement.executeQuery();
             while(rs.next()){
                 Product result = new Product();
                 result.setId(Integer.parseInt(rs.getString(1)));
@@ -156,6 +185,12 @@ public class RequestService {
             rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                rs.close();
+            } catch (Exception ignore){
+
+            }
         }
         return products;
     }
@@ -166,8 +201,9 @@ public class RequestService {
      */
     public List<Product> getProductGiveAway(){
         List<Product> products = new ArrayList<>();
+        ResultSet rs = null;
         try (PreparedStatement statement = connection.prepareStatement(SQLRequest.GET_PRODUCT_GIVE_AWAY.QUERY)) {
-            final ResultSet rs = statement.executeQuery();
+            rs = statement.executeQuery();
             while(rs.next()){
                 Product result = new Product();
                 result.setId(Integer.parseInt(rs.getString(1)));
@@ -184,6 +220,12 @@ public class RequestService {
             rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                rs.close();
+            } catch (Exception ignore){
+
+            }
         }
         return products;
     }
@@ -194,9 +236,10 @@ public class RequestService {
      */
     public List<Client> getClientForProduct(String nameProduct){
         List<Client> clients = new ArrayList<>();
+        ResultSet rs = null;
         try (PreparedStatement statement = connection.prepareStatement(SQLRequest.GET_CLIENT_FOR_PRODUCT.QUERY)) {
             statement.setString(1, nameProduct);
-            final ResultSet rs = statement.executeQuery();
+            rs = statement.executeQuery();
             while(rs.next()){
                 Client result = new Client();
                 result.setId(Integer.parseInt(rs.getString(1)));
@@ -211,6 +254,12 @@ public class RequestService {
             rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                rs.close();
+            } catch (Exception ignore){
+
+            }
         }
         return clients;
     }

@@ -48,13 +48,20 @@ public class ContractService implements Prototype<Contract> {
      */
     @Override
     public Contract getId(int id) {
+        ResultSet rs = null;
         try (PreparedStatement statement = connection.prepareStatement(SqlContract.GET_ID.QUERY)) {
             statement.setInt(1, id);
-            final ResultSet rs = statement.executeQuery();
+            rs = statement.executeQuery();
             rs.next();
             return createOneContract(rs);
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                rs.close();
+            } catch (Exception ignore){
+
+            }
         }
         return null;
     }
@@ -65,15 +72,22 @@ public class ContractService implements Prototype<Contract> {
      */
     @Override
     public List<Contract> read() {
+        ResultSet rs = null;
         List<Contract> contracts = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement(SqlContract.GET.QUERY)) {
-            final ResultSet rs = statement.executeQuery();
+            rs = statement.executeQuery();
             while(rs.next()){
                 contracts.add(createOneContract(rs));
             }
             rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                rs.close();
+            } catch (Exception ignore){
+
+            }
         }
         return contracts;
     }
@@ -93,7 +107,6 @@ public class ContractService implements Prototype<Contract> {
         result.setClientId(rs.getInt(7));
         result.setPrice(rs.getInt(8));
         result.setSale(rs.getBoolean(9));
-        rs.close();
         return result;
     }
 

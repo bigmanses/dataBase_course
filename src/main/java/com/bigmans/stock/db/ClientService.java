@@ -46,13 +46,21 @@ public class ClientService implements Prototype<Client>{
      */
     @Override
     public Client getId(int id) {
+        ResultSet rs = null;
         try (PreparedStatement statement = connection.prepareStatement(SQLClient.GET_ID.QUERY)) {
             statement.setInt(1, id);
-            final ResultSet rs = statement.executeQuery();
+            rs = statement.executeQuery();
             rs.next();
             return createOneClient(rs);
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if(rs != null)
+                try {
+                    rs.close();
+                } catch (Exception ignored){
+
+                }
         }
         return null;
     }
@@ -63,15 +71,21 @@ public class ClientService implements Prototype<Client>{
      */
     @Override
     public List<Client> read() {
+        ResultSet rs = null;
         List<Client> clients = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement(SQLClient.GET.QUERY)) {
-            final ResultSet rs = statement.executeQuery();
+            rs = statement.executeQuery();
             while(rs.next()){
                 clients.add(createOneClient(rs));
             }
-            rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                rs.close();
+            } catch (Exception e){
+
+            }
         }
         return clients;
     }
@@ -89,7 +103,6 @@ public class ClientService implements Prototype<Client>{
         result.setFax(rs.getString(5));
         result.setScore(rs.getString(6));
         result.setNotes(rs.getString(7));
-        rs.close();
         return result;
     }
 
