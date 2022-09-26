@@ -13,7 +13,9 @@ public class TableClients extends AbstractTableModel {
 
 
     public TableClients(List<Client> clients){
-        this.clients = clients;
+        if(clients != null) {
+            this.clients = clients;
+        }
     }
     @Override
     public int getRowCount() {

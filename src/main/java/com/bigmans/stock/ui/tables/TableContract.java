@@ -18,7 +18,9 @@ public class TableContract extends AbstractTableModel {
 
 
     public TableContract(List<Contract> contracts, ClientService clientService, ProductService productService){
-        this.clientService = clientService;
+        if(contracts != null) {
+            this.clientService = clientService;
+        }
         this.contracts = contracts;
         this.productService = productService;
     }

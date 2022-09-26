@@ -13,31 +13,31 @@ public class CreatorDialog {
         dialog.setLayout(new GridBagLayout());
         dialog.setSize(500, 500);
         dialog.setLocationRelativeTo(null);
-        dialog.add(new Label("name"), new GridBagConstraints(0, 0, 1, 1, 0, 0.2, GridBagConstraints.NORTH,
+        dialog.add(new Label("имя"), new GridBagConstraints(0, 0, 1, 1, 0, 0.2, GridBagConstraints.NORTH,
                 GridBagConstraints.HORIZONTAL, new Insets(0,0 ,0 ,0), 0, 0));
         dialog.add(new JTextField(10), new GridBagConstraints(1, 0, 1, 1, 0, 0.2, GridBagConstraints.NORTH,
                 GridBagConstraints.HORIZONTAL, new Insets(0,0 ,0 ,0), 0, 0));
-        dialog.add(new Label("phone"), new GridBagConstraints(0, 2, 1, 1, 0, 0.2, GridBagConstraints.NORTH,
+        dialog.add(new Label("телефон"), new GridBagConstraints(0, 2, 1, 1, 0, 0.2, GridBagConstraints.NORTH,
                 GridBagConstraints.HORIZONTAL, new Insets(0,0 ,0 ,0), 0, 0));
         dialog.add(new JTextField(10), new GridBagConstraints(1, 2, 1, 1, 0, 0.2, GridBagConstraints.NORTH,
                 GridBagConstraints.HORIZONTAL, new Insets(0,0 ,0 ,0), 0, 0));
 
-        dialog.add(new Label("address"), new GridBagConstraints(0, 3, 1, 1, 0, 0.2, GridBagConstraints.NORTH,
+        dialog.add(new Label("фдрес"), new GridBagConstraints(0, 3, 1, 1, 0, 0.2, GridBagConstraints.NORTH,
                 GridBagConstraints.HORIZONTAL, new Insets(0,0 ,0 ,0), 0, 0));
         dialog.add(new JTextField(10), new GridBagConstraints(1, 3, 1, 1, 0, 0.2, GridBagConstraints.NORTH,
                 GridBagConstraints.HORIZONTAL, new Insets(0,0 ,0 ,0), 0, 0));
 
-        dialog.add(new Label("fax"), new GridBagConstraints(0, 4, 1, 1, 0, 0.2, GridBagConstraints.NORTH,
+        dialog.add(new Label("факс"), new GridBagConstraints(0, 4, 1, 1, 0, 0.2, GridBagConstraints.NORTH,
                 GridBagConstraints.HORIZONTAL, new Insets(0,1 ,0,1), 0, 0));
         dialog.add(new JTextField(10), new GridBagConstraints(1, 4, 1, 1, 0, 0.2, GridBagConstraints.NORTH,
                 GridBagConstraints.HORIZONTAL, new Insets(0,0 ,0 ,0), 0, 0));
 
-        dialog.add(new Label("score"), new GridBagConstraints(0, 5, 1, 1, 0, 0.2, GridBagConstraints.NORTH,
+        dialog.add(new Label("счет"), new GridBagConstraints(0, 5, 1, 1, 0, 0.2, GridBagConstraints.NORTH,
                 GridBagConstraints.HORIZONTAL, new Insets(0,1 ,0,1), 0, 0));
         dialog.add(new JTextField(10), new GridBagConstraints(1, 5, 1, 1, 0, 0.2, GridBagConstraints.NORTH,
                 GridBagConstraints.HORIZONTAL, new Insets(0,0 ,0 ,0), 0, 0));
 
-        dialog.add(new Label("notes"), new GridBagConstraints(0, 6, 1, 1, 0, 0.2, GridBagConstraints.NORTH,
+        dialog.add(new Label("записи"), new GridBagConstraints(0, 6, 1, 1, 0, 0.2, GridBagConstraints.NORTH,
                 GridBagConstraints.HORIZONTAL, new Insets(0,1 ,0,1), 0, 0));
         dialog.add(new JTextField(10), new GridBagConstraints(1, 6, 1, 1, 0, 0.2, GridBagConstraints.NORTH,
                 GridBagConstraints.HORIZONTAL, new Insets(0,0 ,0 ,0), 0, 0));

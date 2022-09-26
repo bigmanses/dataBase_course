@@ -13,7 +13,9 @@ public class TableManufacturer extends AbstractTableModel {
 
 
     public TableManufacturer(List<Manufacturer> manufacturers){
-        this.manufacturers = manufacturers;
+        if(manufacturers != null){
+            this.manufacturers = manufacturers;
+        }
     }
     @Override
     public int getRowCount() {

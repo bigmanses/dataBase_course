@@ -15,7 +15,9 @@ public class TableProduct extends AbstractTableModel {
 
     public TableProduct(List<Product> products, ManufacturerService manufacturerService){
         this.manufacturerService = manufacturerService;
-        this.products = products;
+        if(products !=null) {
+            this.products = products;
+        }
     }
     @Override
     public int getRowCount() {

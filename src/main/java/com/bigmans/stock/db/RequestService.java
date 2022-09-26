@@ -37,7 +37,7 @@ public class RequestService {
             while(rs.next()){
                 Product result = new Product();
                 result.setId(Integer.parseInt(rs.getString(1)));
-                result.setName(rs.getString(3));
+                result.setName(rs.getString(2));
                 result.setCharacteristic(rs.getString(3));
                 result.setPriceOne(rs.getInt(4));
                 result.setPackages(rs.getString(5));
@@ -108,8 +108,10 @@ public class RequestService {
                 result.setName(rs.getString(2));
                 result.setNumber(rs.getString(3));
                 result.setContractId(rs.getInt(4));
-                result.setSum(rs.getInt(5));
-                result.setPayment_status(rs.getBoolean(6));
+                result.setDate_score(rs.getDate(5));
+                result.setSum(rs.getInt(6));
+                result.setShipment_status(rs.getBoolean(7));
+                result.setPayment_status(rs.getBoolean(8));
                 scores.add(result);
             }
             rs.close();
@@ -261,6 +263,7 @@ public class RequestService {
 
             }
         }
+
         return clients;
     }
 

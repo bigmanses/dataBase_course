@@ -71,7 +71,7 @@ AS
 
 CREATE OR REPLACE VIEW score_sum_payment
 AS
-   SELECT id, name, number, contract, sum, payment_status FROM score;
+   SELECT id, name, number, contract, date_score, sum, shipment_status,  payment_status FROM score;
 
 CREATE OR REPLACE VIEW contract_info
    AS

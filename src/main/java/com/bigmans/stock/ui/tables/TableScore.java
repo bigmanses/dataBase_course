@@ -16,7 +16,9 @@ public class TableScore extends AbstractTableModel {
 
 
     public TableScore(List<Score> scores,ContractService contractService){
-        this.scores = scores;
+        if(scores!=null) {
+            this.scores = scores;
+        }
         this.contractService = contractService;
     }
     @Override

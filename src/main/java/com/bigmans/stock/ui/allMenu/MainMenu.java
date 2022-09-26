@@ -1,12 +1,12 @@
 package com.bigmans.stock.ui.allMenu;
 
 import com.bigmans.stock.db.*;
-import com.bigmans.stock.domain.*;
+import com.bigmans.stock.domain.Client;
 import com.bigmans.stock.ui.Act;
 import com.bigmans.stock.ui.ActionId;
-import com.bigmans.stock.ui.VersionType;
 import com.bigmans.stock.ui.actions.DialogProvider;
 import com.bigmans.stock.ui.actions.EssenceProvider;
+import com.bigmans.stock.ui.addition.CheckCorrect;
 import com.bigmans.stock.ui.tables.*;
 
 import javax.swing.*;
@@ -17,7 +17,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.Connection;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -30,11 +29,14 @@ public class MainMenu extends JFrame {
     /** Верхняя панель с кнопками */
     JPanel btnPanel = new JPanel(new GridLayout(1,5));
     /** Нижняя панель с кнопками */
-    JPanel contentPanel = new JPanel(new GridLayout(1,3));
+    JPanel contentPanel = new JPanel(new GridLayout(2,4));
     /** Кнопки верхней панели */
     List<BtnWithName> btns = Arrays.asList(new BtnWithName("Клиенты", ActionId.CLIENT.getId()),  new BtnWithName("Продукты", ActionId.PRODUCT.getId()),
             new BtnWithName("Контракты", ActionId.CONTRACT.getId()), new BtnWithName("Производители", ActionId.MANUFACTURE.getId()),
-            new BtnWithName("Счета", ActionId.SCORE.getId()));
+            new BtnWithName("Счета", ActionId.SCORE.getId()), new BtnWithName("Наличие", ActionId.PRODUCT_BUYING.getId()),
+            new BtnWithName("Возможные", ActionId.PRODUCT_FOR_ORDER.getId()), new BtnWithName("Склад", ActionId.PRODUCT_FOR_STOCK.getId()),
+            new BtnWithName("Купленные", ActionId.PRODUCT_GIVE_AWAY.getId()), new BtnWithName("Неоплаченные", ActionId.SCORE_NOT_PAYMENT.getId()),
+            new BtnWithName("Информация", ActionId.SCORE_SUM_PAYMENT.getId()), new BtnWithName("Поиск по товару", ActionId.CLIENT_FOR_PRODUCT.getId()));
     /** Лист с нашими таблицами */
     List<JTable> tables = new ArrayList<>();
     /** Кнопки нижней панели */
@@ -49,6 +51,7 @@ public class MainMenu extends JFrame {
     ProductService productService;
     ContractService contractService;
     ScoreService scoreService;
+    RequestService requestService;
     /** Поставщик диалогового окна */
     DialogProvider dialogProvider = new DialogProvider();
     /** Флаг действующей панелии */
@@ -62,35 +65,44 @@ public class MainMenu extends JFrame {
         this.productService = new ProductService(connection);
         this.contractService = new ContractService(connection);
         this.scoreService = new ScoreService(connection);
+        this.requestService = new RequestService(connection);
         content.add("empty", new JPanel());
         Arrays.stream(ActionId.values())
               .forEach(a->content.add(a.getId(), createComponent(a.getId())));
 
         btns.forEach(b -> b.addActionListener(actionEvent -> {
             System.out.println("click: " + ((JComponent)actionEvent.getSource()).getName());
+            if(b.getText().equals("Поиск по товару")) searchClient();
             layout.show(content, ((JComponent)actionEvent.getSource()).getName());
             openPanel = ((JComponent)actionEvent.getSource()).getName();
             add.setEnabled(true);
             deleteBtn.setEnabled(false);
-            editBtn.setEnabled(false);}
+            editBtn.setEnabled(false);
+            checkButton();
+        }
         ));
 
         add.addActionListener(actionEvent -> {
             if(openPanel.equals(ActionId.CLIENT.getId())) {
                 dialogProvider.createDialog(openPanel, this, clientService, Act.ADD.getId(), null, null);
                 tables.get(0).setModel(new TableClients(clientService.read()));
+                updateTable();
             } else if(openPanel.equals(ActionId.PRODUCT.getId())) {
                 dialogProvider.createDialog(openPanel, this, productService, Act.ADD.getId(), null, null);
                 tables.get(1).setModel(new TableProduct(productService.read(), manufacturerService));
+                updateTable();
             } else if(openPanel.equals(ActionId.CONTRACT.getId())) {
                 dialogProvider.createDialog(openPanel, this, contractService, Act.ADD.getId(), null, null);
                 tables.get(2).setModel(new TableContract(contractService.read(), clientService, productService));
+                updateTable();
             } else if(openPanel.equals(ActionId.MANUFACTURE.getId())){
                 dialogProvider.createDialog(openPanel, this, manufacturerService, Act.ADD.getId(), null, null);
                 tables.get(3).setModel(new TableManufacturer(manufacturerService.read()));
+                updateTable();
             } else if(openPanel.equals(ActionId.SCORE.getId())){
                 dialogProvider.createDialog(openPanel, this, scoreService, Act.ADD.getId(), null, null);
                 tables.get(4).setModel(new TableScore(scoreService.read(), contractService));
+                updateTable();
             }
             deleteBtn.setEnabled(false);
         });
@@ -107,12 +119,16 @@ public class MainMenu extends JFrame {
 
 
     private void initPanels(){
-        for (BtnWithName btnWithName: btns){
-            btnPanel.add(btnWithName);
+        for (int i = 0; i<5; i++){
+            btnPanel.add(btns.get(i));
         }
         add.setEnabled(false);
         deleteBtn.setEnabled(false);
         editBtn.setEnabled(false);
+        for (int i = 5; i < 12; i++) {
+            contentPanel.add(btns.get(i));
+            btns.get(i).setEnabled(false);
+        }
         contentPanel.add(add);
         contentPanel.add(deleteBtn);
         contentPanel.add(editBtn);
@@ -146,6 +162,27 @@ public class MainMenu extends JFrame {
         if(id.equals(ActionId.SCORE.getId())) {
             tableModel = new TableScore(scoreService.read(), contractService);
         }
+        if(id.equals(ActionId.PRODUCT_BUYING.getId())) {
+            tableModel = new TableProduct(requestService.getProductBuying(), manufacturerService);
+        }
+        if(id.equals(ActionId.PRODUCT_FOR_ORDER.getId())) {
+            tableModel = new TableProduct(requestService.getProductForOrder(), manufacturerService);
+        }
+        if(id.equals(ActionId.PRODUCT_FOR_STOCK.getId())) {
+            tableModel = new TableProduct(requestService.getProductForStock(), manufacturerService);
+        }
+        if(id.equals(ActionId.PRODUCT_GIVE_AWAY.getId())) {
+            tableModel = new TableProduct(requestService.getProductGiveAway(), manufacturerService);
+        }
+        if(id.equals(ActionId.SCORE_NOT_PAYMENT.getId())) {
+            tableModel = new TableScore(requestService.getScoreNotPayment(), contractService);
+        }
+        if(id.equals(ActionId.SCORE_SUM_PAYMENT.getId())) {
+            tableModel = new TableScore(requestService.getScoreSumPayment(), contractService);
+        }
+        if(id.equals(ActionId.CLIENT_FOR_PRODUCT.getId())) {
+            tableModel = new TableClients(requestService.getClientForProduct("поп"));
+        }
         JTable table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setPreferredSize(new Dimension(400, 400));
@@ -159,6 +196,73 @@ public class MainMenu extends JFrame {
             setName(id);
         }
     }
+
+    private void checkButton(){
+        if(openPanel.equals(ActionId.PRODUCT.getId())){
+            for (int i = 5; i<9; i++) {
+                btns.get(i).setEnabled(true);
+            }
+            for (int i = 9; i<12; i++) {
+                btns.get(i).setEnabled(false);
+            }
+        }
+        if(openPanel.equals(ActionId.CLIENT.getId())){
+            for (int i = 5; i<11; i++) {
+                btns.get(i).setEnabled(false);
+            }
+            btns.get(11).setEnabled(true);
+        }
+        if(openPanel.equals(ActionId.SCORE.getId())){
+            for (int i = 5; i<9; i++) {
+                btns.get(i).setEnabled(false);
+            }
+            for (int i = 9; i<11; i++) {
+                btns.get(i).setEnabled(true);
+            }
+            btns.get(11).setEnabled(false);
+        }
+        if(openPanel.equals(ActionId.CONTRACT.getId()) || openPanel.equals(ActionId.MANUFACTURE.getId())){
+            for (int i = 5; i<12; i++) {
+                btns.get(i).setEnabled(false);
+            }
+        }
+    }
+
+    public void updateTable() {
+        tables.get(5).setModel(new TableProduct(requestService.getProductBuying(), manufacturerService));
+        tables.get(6).setModel(new TableProduct(requestService.getProductForOrder(), manufacturerService));
+        tables.get(7).setModel(new TableProduct(requestService.getProductForStock(), manufacturerService));
+        tables.get(8).setModel(new TableProduct(requestService.getProductGiveAway(), manufacturerService));
+        tables.get(9).setModel(new TableScore(requestService.getScoreNotPayment(), contractService));
+        tables.get(10).setModel(new TableScore(requestService.getScoreSumPayment(), contractService));
+        tables.get(11).setModel(new TableClients(requestService.getClientForProduct("поп")));
+    }
+
+    private void searchClient(){
+        JDialog dialog = new JDialog(this, "поиск", true);
+        dialog.setLayout(new GridBagLayout());
+        dialog.setSize(300, 100);
+        dialog.setLocationRelativeTo(null);
+        dialog.add(new Label("продукт"), new GridBagConstraints(0, 10, 1, 1, 0, 0.2, GridBagConstraints.NORTH,
+                GridBagConstraints.HORIZONTAL, new Insets(0,0 ,0 ,0), 0, 0));
+        dialog.add(new JTextField(10), new GridBagConstraints(1, 10, 1, 1, 0, 0.2, GridBagConstraints.NORTH,
+                GridBagConstraints.HORIZONTAL, new Insets(0,0 ,0 ,0), 0, 0));
+        Button search = new Button("Найти");
+        dialog.add(search, new GridBagConstraints(1, 11, 1, 1, 0, 0.2, GridBagConstraints.NORTH,
+                GridBagConstraints.HORIZONTAL, new Insets(0,0 ,0 ,0), 0, 0));
+        CheckCorrect checkCorrect = new CheckCorrect(clientService, dialog);
+        Component[] components = dialog.getContentPane().getComponents();
+        search.addActionListener(actionEvent1 -> {
+            java.util.List<JTextField> texts = new ArrayList<>();
+            if(!checkCorrect.checkCorrect(texts)){
+                dialog.setVisible(false);
+                tables.get(11).setModel(new TableClients(requestService.getClientForProduct((((JTextField) components[1]).getText()))));
+            }
+        });
+        dialog.setVisible(true);
+        dialog.setVisible(false);
+    }
+
 
     public class MouseClick implements MouseListener{
         JTable table;
@@ -188,18 +292,23 @@ public class MainMenu extends JFrame {
                             if(openPanel.equals(ActionId.CLIENT.getId())) {
                                 clientService.delete(EssenceProvider.getClient(table, row));
                                 table.setModel(new TableClients(clientService.read()));
+                                updateTable();
                             } else if(openPanel.equals(ActionId.MANUFACTURE.getId())){
                                 manufacturerService.delete(EssenceProvider.getManufacturer(table, row));
                                 table.setModel(new TableManufacturer(manufacturerService.read()));
+                                updateTable();
                             } else if(openPanel.equals(ActionId.PRODUCT.getId())){
                                 productService.delete(EssenceProvider.getProduct(table, row));
                                 table.setModel(new TableProduct(productService.read(), manufacturerService));
+                                updateTable();
                             } else if(openPanel.equals(ActionId.CONTRACT.getId())){
                                 contractService.delete(EssenceProvider.getContract(table, row));
                                 table.setModel(new TableContract(contractService.read(), clientService, productService));
+                                updateTable();
                             } else if(openPanel.equals(ActionId.SCORE.getId())){
                                 scoreService.delete(EssenceProvider.getScore(table, row));
                                 table.setModel(new TableScore(scoreService.read(), contractService));
+                                updateTable();
                             }
                         }
                         button_delete.setEnabled(false);
@@ -212,14 +321,19 @@ public class MainMenu extends JFrame {
                         if(!button_edit.isEnabled());
                             else if(openPanel.equals(ActionId.CLIENT.getId()) && dialogProvider.createDialog(openPanel, frame, clientService, Act.EDIT.getId(), table, row) == 0) {
                                 table.setModel(new TableClients(clientService.read()));
+                                updateTable();
                             } else if(openPanel.equals(ActionId.MANUFACTURE.getId()) && dialogProvider.createDialog(openPanel, frame, manufacturerService, Act.EDIT.getId(), table, row) == 0){
                                 table.setModel(new TableManufacturer(manufacturerService.read()));
+                                updateTable();
                             } else if(openPanel.equals(ActionId.PRODUCT.getId()) && dialogProvider.createDialog(openPanel, frame, productService, Act.EDIT.getId(), table, row) == 0){
                                 table.setModel(new TableProduct(productService.read(), manufacturerService));
+                                updateTable();
                             } else if(openPanel.equals(ActionId.CONTRACT.getId()) && dialogProvider.createDialog(openPanel, frame, contractService, Act.EDIT.getId(), table, row) == 0){
                                 table.setModel(new TableContract(contractService.read(), clientService, productService));
+                                updateTable();
                             } else if(openPanel.equals(ActionId.SCORE.getId()) && dialogProvider.createDialog(openPanel, frame, scoreService, Act.EDIT.getId(), table, row) == 0){
                                 table.setModel(new TableScore(scoreService.read(), contractService));
+                                updateTable();
                             }
                         button_delete.setEnabled(false);
                         button_edit.setEnabled(false);
