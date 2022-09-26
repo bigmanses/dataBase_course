@@ -123,7 +123,10 @@ public class ClientService implements Prototype<Client>{
             statement.setString(1, client.getName());
             statement.setString(2, client.getPhone());
             statement.setString(3, client.getAddress());
-            statement.setInt(4, client.getId());
+            statement.setString(4, client.getFax());
+            statement.setString(5, client.getScore());
+            statement.setString(6, client.getNotes());
+            statement.setInt(7, client.getId());
         }, connection);
         return ids.size() > 0;
     }
@@ -151,7 +154,7 @@ public class ClientService implements Prototype<Client>{
         GET_ID("SELECT* from client WHERE client.id = (?)" ),
         INSERT("INSERT INTO client VALUES (DEFAULT, (?), (?), (?), (?), (?), (?)) RETURNING id"),
         DELETE("DELETE FROM client WHERE  name = (?) AND phone = (?) AND address = (?) RETURNING id"),
-        UPDATE("UPDATE client SET name = (?), phone = (?), address = (?) WHERE id = (?) RETURNING id");
+        UPDATE("UPDATE client SET name = (?), phone = (?), address = (?), fax = (?), score = (?), notes = (?) WHERE id = (?) RETURNING id");
 
         final String QUERY;
 

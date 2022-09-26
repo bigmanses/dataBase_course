@@ -29,6 +29,7 @@ public class TableClients extends AbstractTableModel {
     public Object getValueAt(int i, int i1) {
         Client client = clients.get(i);
         switch (i1){
+            case -1: return client.getId();
             case 0: return client.getName();
             case 1: return client.getPhone();
             case 2: return client.getAddress();
@@ -48,12 +49,12 @@ public class TableClients extends AbstractTableModel {
     @Override
     public String getColumnName(int columnCount){
         switch (columnCount){
-            case 0: return "name";
-            case 1: return "phone";
-            case 2: return "address";
-            case 3: return "fax";
-            case 4: return "score";
-            case 5: return "notes";
+            case 0: return "имя";
+            case 1: return "телефон";
+            case 2: return "адрес";
+            case 3: return "факс";
+            case 4: return "счет";
+            case 5: return "записи";
         }
         return "";
 

@@ -1,7 +1,6 @@
 package com.bigmans.stock.ui.tables;
 
 import com.bigmans.stock.db.ManufacturerService;
-import com.bigmans.stock.domain.Manufacturer;
 import com.bigmans.stock.domain.Product;
 
 import javax.swing.table.AbstractTableModel;
@@ -32,6 +31,7 @@ public class TableProduct extends AbstractTableModel {
     public Object getValueAt(int i, int i1) {
         Product product = products.get(i);
         switch (i1){
+            case -1: return product.getId();
             case 0: return product.getName();
             case 1: return product.getCharacteristic();
             case 2: return product.getPriceOne();

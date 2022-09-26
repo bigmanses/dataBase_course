@@ -14,6 +14,7 @@ import java.sql.Date;
 public class Contract implements Model {
     private int id;
     private java.sql.Date date_contract;
+    private String number;
     private String about;
     private Product product;
     private int amount;

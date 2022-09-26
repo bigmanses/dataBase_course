@@ -35,6 +35,7 @@ CREATE TABLE product(
 CREATE TABLE contract (
   id serial PRIMARY KEY,
   date_contract date NOT NULL,
+  number varchar(30),
   about varchar(50),
   product integer NOT NULL REFERENCES product(id),
   amount integer NOT NULL,

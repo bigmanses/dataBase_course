@@ -120,10 +120,14 @@ public class ScoreService implements Prototype<Score> {
     @Override
     public boolean update(Score score) {
         List<Integer> ids = SqlUtils.execSqlWithReturningId(SqlScore.UPDATE.QUERY, (statement) -> {
-            statement.setInt(1, score.getSum());
-            statement.setBoolean(2, score.isShipment_status());
-            statement.setBoolean(3, score.isPayment_status());
-            statement.setInt(4, score.getId());
+            statement.setString(1, score.getName());
+            statement.setString(2, score.getNumber());
+            statement.setInt(3, score.getContract().getId());
+            statement.setDate(4, score.getDate_score());
+            statement.setInt(5, score.getSum());
+            statement.setBoolean(6, score.isShipment_status());
+            statement.setBoolean(7, score.isPayment_status());
+            statement.setInt(8, score.getId());
         }, connection);
         return ids.size() > 0;
     }
@@ -151,7 +155,7 @@ public class ScoreService implements Prototype<Score> {
         GET_ID("SELECT* from score WHERE score.id = (?)" ),
         INSERT("INSERT INTO score VALUES (DEFAULT, (?), (?), (?), (?), (?), (?), (?)) RETURNING id"),
         DELETE("DELETE FROM score WHERE  name = (?) AND number = (?) AND contract = (?) RETURNING id"),
-        UPDATE("UPDATE score SET sum = (?), shipment_status = (?), payment_status = (?) WHERE id = (?) RETURNING id");
+        UPDATE("UPDATE score SET name = (?), number = (?), contract = (?), date_score = (?), sum = (?), shipment_status = (?), payment_status = (?) WHERE id = (?) RETURNING id");
 
         final String QUERY;
 

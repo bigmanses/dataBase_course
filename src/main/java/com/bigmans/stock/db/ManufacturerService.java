@@ -115,7 +115,9 @@ public class ManufacturerService implements Prototype<Manufacturer>{
             statement.setString(1, manufacturer.getName());
             statement.setString(2, manufacturer.getAddress());
             statement.setString(3, manufacturer.getDirector());
-            statement.setInt(4, manufacturer.getId());
+            statement.setString(4, manufacturer.getAccountant());
+            statement.setString(5, manufacturer.getRequisites());
+            statement.setInt(6, manufacturer.getId());
         }, connection);
         return ids.size() > 0;
     }
@@ -143,7 +145,7 @@ public class ManufacturerService implements Prototype<Manufacturer>{
         GET_ID("SELECT* from manufacturer WHERE manufacturer.id = (?)" ),
         INSERT("INSERT INTO manufacturer VALUES (DEFAULT, (?), (?), (?), (?), (?)) RETURNING id"),
         DELETE("DELETE FROM manufacturer WHERE  name = (?) AND address = (?) AND director = (?)  RETURNING id"),
-        UPDATE("UPDATE manufacturer SET name = (?), address = (?), director = (?) WHERE id = (?) RETURNING id");
+        UPDATE("UPDATE manufacturer SET name = (?), address = (?), director = (?), accountant = (?), requisites = (?) WHERE id = (?) RETURNING id");
 
         final String QUERY;
 

@@ -29,6 +29,7 @@ public class TableManufacturer extends AbstractTableModel {
     public Object getValueAt(int i, int i1) {
         Manufacturer manufacturer = manufacturers.get(i);
         switch (i1){
+            case -1: return manufacturer.getId();
             case 0: return manufacturer.getName();
             case 1: return manufacturer.getAddress();
             case 2: return manufacturer.getDirector();

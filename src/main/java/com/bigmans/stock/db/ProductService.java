@@ -123,8 +123,11 @@ public class ProductService implements Prototype<Product> {
             statement.setString(1, product.getName());
             statement.setString(2, product.getCharacteristic());
             statement.setInt(3, product.getPriceOne());
-            statement.setInt(4, product.getAmount());
-            statement.setInt(5, product.getId());
+            statement.setString(4, product.getPackages());
+            statement.setString(5, product.getBatchDelivery());
+            statement.setInt(6, product.getAmount());
+            statement.setInt(7, product.getManufacturer().getId());
+            statement.setInt(8, product.getId());
         }, connection);
         return ids.size() > 0;
     }
@@ -151,7 +154,7 @@ public class ProductService implements Prototype<Product> {
         GET_ID("SELECT* from product WHERE product.id = (?)" ),
         INSERT("INSERT INTO product VALUES (DEFAULT, (?), (?), (?), (?), (?), (?), (?)) RETURNING id"),
         DELETE("DELETE FROM product WHERE  name = (?) AND priceOne = (?) RETURNING id"),
-        UPDATE("UPDATE product SET name = (?), characteristic = (?), priceOne = (?), amount = (?) WHERE id = (?) RETURNING id");
+        UPDATE("UPDATE product SET name = (?), characteristic = (?), priceOne = (?), packages = (?), batchDelivery = (?), amount = (?), manufacturer = (?) WHERE id = (?) RETURNING id");
 
         final String QUERY;
 

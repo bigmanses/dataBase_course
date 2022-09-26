@@ -1,8 +1,6 @@
 package com.bigmans.stock.db;
 
-import com.bigmans.stock.domain.Client;
 import com.bigmans.stock.domain.Contract;
-import com.bigmans.stock.domain.Product;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
@@ -31,13 +29,14 @@ public class ContractService implements Prototype<Contract> {
     public List<Integer> create(Contract contract) {
         List<Integer> ids = SqlUtils.execSqlWithReturningId(SqlContract.INSERT.QUERY, (statement) -> {
             statement.setDate(1, contract.getDate_contract());
-            statement.setString(2, contract.getAbout());
-            statement.setInt(3, contract.getProduct().getId());
-            statement.setInt(4, contract.getAmount());
-            statement.setString(5, contract.getTerms());
-            statement.setInt(6, contract.getClient().getId());
-            statement.setInt(7, contract.getPrice());
-            statement.setBoolean(8, contract.isSale());
+            statement.setString(2, contract.getNumber());
+            statement.setString(3, contract.getAbout());
+            statement.setInt(4, contract.getProduct().getId());
+            statement.setInt(5, contract.getAmount());
+            statement.setString(6, contract.getTerms());
+            statement.setInt(7, contract.getClient().getId());
+            statement.setInt(8, contract.getPrice());
+            statement.setBoolean(9, contract.isSale());
         }, connection);
         return ids;
     }
@@ -105,13 +104,14 @@ public class ContractService implements Prototype<Contract> {
         Contract result = new Contract();
         result.setId(Integer.parseInt(rs.getString(1)));
         result.setDate_contract(rs.getDate(2));
-        result.setAbout(rs.getString(3));
-        result.setProductId(rs.getInt(4));
-        result.setAmount(rs.getInt(5));
-        result.setTerms(rs.getString(6));
-        result.setClientId(rs.getInt(7));
-        result.setPrice(rs.getInt(8));
-        result.setSale(rs.getBoolean(9));
+        result.setNumber(rs.getString(3));
+        result.setAbout(rs.getString(4));
+        result.setProductId(rs.getInt(5));
+        result.setAmount(rs.getInt(6));
+        result.setTerms(rs.getString(7));
+        result.setClientId(rs.getInt(8));
+        result.setPrice(rs.getInt(9));
+        result.setSale(rs.getBoolean(10));
         return result;
     }
 
@@ -124,10 +124,15 @@ public class ContractService implements Prototype<Contract> {
     public boolean update(Contract contract) {
         List<Integer> ids = SqlUtils.execSqlWithReturningId(SqlContract.UPDATE.QUERY, (statement) -> {
             statement.setDate(1, contract.getDate_contract());
-            statement.setInt(2, contract.getAmount());
-            statement.setString(3, contract.getTerms());
-            statement.setInt(4, contract.getPrice());
-            statement.setInt(5, contract.getId());
+            statement.setString(2, contract.getNumber());
+            statement.setString(3, contract.getAbout());
+            statement.setInt(4, contract.getProduct().getId());
+            statement.setInt(5, contract.getAmount());
+            statement.setString(6, contract.getTerms());
+            statement.setInt(7, contract.getClient().getId());
+            statement.setInt(8, contract.getPrice());
+            statement.setBoolean(9, contract.isSale());
+            statement.setInt(10, contract.getId());
         }, connection);
         return ids.size() > 0;
     }
@@ -153,9 +158,9 @@ public class ContractService implements Prototype<Contract> {
     public enum SqlContract {
         GET("SELECT* from contract"),
         GET_ID("SELECT* from contract WHERE contract.id = (?)" ),
-        INSERT("INSERT INTO contract VALUES (DEFAULT, (?), (?), (?), (?), (?), (?), (?), (?)) RETURNING id"),
+        INSERT("INSERT INTO contract VALUES (DEFAULT, (?), (?), (?), (?), (?), (?), (?), (?), (?)) RETURNING id"),
         DELETE("DELETE FROM contract WHERE  date_contract = (?) AND  product = (?) AND client = (?)  RETURNING id"),
-        UPDATE("UPDATE contract SET date_contract = (?), amount = (?), terms = (?), price = (?) WHERE id = (?) RETURNING id");
+        UPDATE("UPDATE contract SET date_contract = (?), number = (?), about = (?), product = (?), amount = (?), terms = (?), client = (?), price = (?), isSale = (?) WHERE id = (?) RETURNING id");
 
         final String QUERY;
 

@@ -15,10 +15,10 @@ INSERT INTO product (name, characteristic, priceOne, packages, batchDelivery, am
  ('adidas  crazychaos 2.0 ', 'Цвет: белый; Размер: 41; Страна: США;', 7000, 'Упакован в прочную коробку', 'Поставка от 5 штук', 30, 2),
  ('Джинсы бананы', 'Цвет: черныц; Размер: M; Страна: Италия;', 4000, 'Упакован в бумажный пакет', 'Поставка от 3 штук', 0, 1);
 
-INSERT INTO contract (date_contract, about, product, amount, terms, client, price, isSale) values
+INSERT INTO contract (date_contract,number, about, product, amount, terms, client, price, isSale) values
 
- ('January 8, 2022', 'Покупка 10 пар кроссовок', 1, 10, 'Заказ заберут в течение 10 дней', 3, 50000, true),
- ('August 8, 2022', 'Покупка 5 пар джинс', 3, 5, 'Заказ будет оплачен картой', 2, 20000, true);
+ ('January 8, 2022', '111', 'Покупка 10 пар кроссовок', 1, 10, 'Заказ заберут в течение 10 дней', 3, 50000, true),
+ ('August 8, 2022', '222', 'Покупка 5 пар джинс', 3, 5, 'Заказ будет оплачен картой', 2, 20000, true);
 
 INSERT INTO score (name, number, contract, date_score, sum, shipment_status, payment_status) values
  ('Счет', '15471', 1, 'January 8, 2022', 20000, false, true),
