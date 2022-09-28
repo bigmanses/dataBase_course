@@ -66,6 +66,29 @@ public class ContractService implements Prototype<Contract> {
     }
 
     @Override
+    public List<Contract> getName(String name) {
+        ResultSet rs = null;
+        try (PreparedStatement statement = connection.prepareStatement(SqlContract.GET_NAME.QUERY)) {
+            statement.setString(1, name);
+            rs = statement.executeQuery();
+            List<Contract> contracts = new ArrayList<>();
+            while(rs.next()) {
+                contracts.add(createOneContract(rs));
+            }
+            return contracts;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                rs.close();
+            } catch (Exception ignore){
+
+            }
+        }
+        return null;
+    }
+
+    @Override
     public Connection getConnect() {
         return connection;
     }
@@ -148,6 +171,7 @@ public class ContractService implements Prototype<Contract> {
             statement.setDate(1, contract.getDate_contract());
             statement.setInt(2, contract.getProduct().getId());
             statement.setInt(3, contract.getClient().getId());
+            statement.setInt(4, contract.getId());
         }, connection);
         return ids.size() > 0;
     }
@@ -158,8 +182,9 @@ public class ContractService implements Prototype<Contract> {
     public enum SqlContract {
         GET("SELECT* from contract"),
         GET_ID("SELECT* from contract WHERE contract.id = (?)" ),
+        GET_NAME("select contract.*  from contract JOIN client ON contract.client = client.id where client.name = (?)" ),
         INSERT("INSERT INTO contract VALUES (DEFAULT, (?), (?), (?), (?), (?), (?), (?), (?), (?)) RETURNING id"),
-        DELETE("DELETE FROM contract WHERE  date_contract = (?) AND  product = (?) AND client = (?)  RETURNING id"),
+        DELETE("DELETE FROM contract WHERE  date_contract = (?) AND  product = (?) AND client = (?) AND id = (?) RETURNING id"),
         UPDATE("UPDATE contract SET date_contract = (?), number = (?), about = (?), product = (?), amount = (?), terms = (?), client = (?), price = (?), isSale = (?) WHERE id = (?) RETURNING id");
 
         final String QUERY;

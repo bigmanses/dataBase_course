@@ -46,6 +46,29 @@ public class ScoreService implements Prototype<Score> {
     }
 
     @Override
+    public List<Score> getName(String name) {
+        ResultSet rs = null;
+        try (PreparedStatement statement = connection.prepareStatement(SqlScore.GET_NAME.QUERY)) {
+            statement.setString(1, name);
+            rs = statement.executeQuery();
+            List<Score> scores = new ArrayList<>();
+            while (rs.next()){
+                scores.add(createOneScore(rs));
+            }
+            return scores;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                rs.close();
+            } catch (Exception ignore){
+
+            }
+        }
+        return null;
+    }
+
+    @Override
     public Connection getConnect() {
         return connection;
     }
@@ -153,6 +176,7 @@ public class ScoreService implements Prototype<Score> {
     public enum SqlScore {
         GET("SELECT* from score"),
         GET_ID("SELECT* from score WHERE score.id = (?)" ),
+        GET_NAME("select score.* from score JOIN contract ON  score.contract = contract.id JOIN client ON contract.client = client.id where client.name = (?)"),
         INSERT("INSERT INTO score VALUES (DEFAULT, (?), (?), (?), (?), (?), (?), (?)) RETURNING id"),
         DELETE("DELETE FROM score WHERE  name = (?) AND number = (?) AND contract = (?) RETURNING id"),
         UPDATE("UPDATE score SET name = (?), number = (?), contract = (?), date_score = (?), sum = (?), shipment_status = (?), payment_status = (?) WHERE id = (?) RETURNING id");

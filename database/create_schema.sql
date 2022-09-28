@@ -4,8 +4,8 @@ CREATE TABLE client
   name varchar(70) NOT NULL,
   phone varchar(15) NOT NULL,
   address varchar(50) NOT NULL,
-  fax varchar(10),
-  score varchar(15) NOT NULL,
+  fax varchar(20),
+  score varchar(20) NOT NULL,
   notes varchar(30)
 );
 
@@ -59,6 +59,14 @@ CREATE TABLE score(
   payment_status boolean DEFAULT false,
 
   CHECK(sum > 0)
+);
+
+CREATE TABLE users
+(
+  id serial PRIMARY KEY,
+  login varchar(70) NOT NULL,
+  password varchar(15) NOT NULL,
+  name varchar(130) NOT NULL
 );
 
 CREATE OR REPLACE VIEW product_for_buying

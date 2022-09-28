@@ -45,6 +45,11 @@ public class ProductService implements Prototype<Product> {
     }
 
     @Override
+    public List<Product> getName(String name) {
+        return null;
+    }
+
+    @Override
     public Connection getConnect() {
         return connection;
     }

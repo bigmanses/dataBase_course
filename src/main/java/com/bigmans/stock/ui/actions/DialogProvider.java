@@ -96,5 +96,17 @@ public class DialogProvider {
         return -1;
     }
 
+    public int createDialog(JFrame frame, Prototype prototype, JTable table, Integer numberStr, String nameUser) {
+        this.service = prototype;
+        this.frame = frame;
+        this.dialog = new JDialog(frame, "add", true);
+        sale.setSelected(true);
+        this.listenDialog = new ListenDialog( new SaveUpdateData(sale, shipped, pay, frame, prototype, dialog), new CheckCorrect(prototype, dialog), frame);
+        JDialog dialog = CreatorDialog.getContractDialogClient(this.dialog, table, numberStr, nameUser);
+        listenDialog.listenDialogContract(dialog);
+        dialog.setVisible(true);
+        return 0;
+    }
+
 }
 

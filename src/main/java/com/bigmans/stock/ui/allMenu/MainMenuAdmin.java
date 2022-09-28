@@ -1,7 +1,6 @@
 package com.bigmans.stock.ui.allMenu;
 
 import com.bigmans.stock.db.*;
-import com.bigmans.stock.domain.Client;
 import com.bigmans.stock.ui.Act;
 import com.bigmans.stock.ui.ActionId;
 import com.bigmans.stock.ui.actions.DialogProvider;
@@ -21,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MainMenu extends JFrame {
+public class MainMenuAdmin extends JFrame {
     /** Макет с помощью которого мы можем переключать наши таблицы*/
     CardLayout layout = new CardLayout();
     /** Панель, в которой хранятся все наши таблицы */
@@ -57,8 +56,8 @@ public class MainMenu extends JFrame {
     /** Флаг действующей панелии */
     String openPanel;
 
-    public MainMenu(Connection connection) throws HeadlessException {
-        super("Склад");
+    public MainMenuAdmin(Connection connection, String nameUser) throws HeadlessException {
+        super("Склад - " + "User: " + nameUser);
         this.connection = connection;
         this.clientService = new ClientService(connection);
         this.manufacturerService = new ManufacturerService(connection);
@@ -106,12 +105,9 @@ public class MainMenu extends JFrame {
             }
             deleteBtn.setEnabled(false);
         });
-
-        tables.get(0).addMouseListener(new MouseClick(tables.get(0), deleteBtn, editBtn,this));
-        tables.get(1).addMouseListener(new MouseClick(tables.get(1), deleteBtn, editBtn, this));
-        tables.get(2).addMouseListener(new MouseClick(tables.get(2), deleteBtn, editBtn, this));
-        tables.get(3).addMouseListener(new MouseClick(tables.get(3), deleteBtn, editBtn, this));
-        tables.get(4).addMouseListener(new MouseClick(tables.get(4), deleteBtn, editBtn, this));
+        for (int i = 0; i < 5; i++) {
+            tables.get(i).addMouseListener(new MouseClick(tables.get(i), deleteBtn, editBtn,this));
+        }
         initPanels();
         initFrame();
     }

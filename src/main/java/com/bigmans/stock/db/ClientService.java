@@ -1,7 +1,6 @@
 package com.bigmans.stock.db;
 
 import com.bigmans.stock.domain.Client;
-import com.bigmans.stock.domain.Manufacturer;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
@@ -52,6 +51,33 @@ public class ClientService implements Prototype<Client>{
             rs = statement.executeQuery();
             rs.next();
             return createOneClient(rs);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if(rs != null)
+                try {
+                    rs.close();
+                } catch (Exception ignored){
+
+                }
+        }
+        return null;
+    }
+
+    /** Поиск клиентов по имени
+     * @param name - имя клиента
+     * @return найденный клиент
+     */
+    @Override
+    public List<Client> getName(String name) {
+        ResultSet rs = null;
+        List<Client> clients = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement(SQLClient.GET_NAME.QUERY)) {
+            statement.setString(1, name);
+            rs = statement.executeQuery();
+            rs.next();
+            clients.add(createOneClient(rs));
+           return clients;
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -152,6 +178,7 @@ public class ClientService implements Prototype<Client>{
     public enum SQLClient {
         GET("SELECT* from client"),
         GET_ID("SELECT* from client WHERE client.id = (?)" ),
+        GET_NAME("SELECT* from client WHERE client.name = (?)" ),
         INSERT("INSERT INTO client VALUES (DEFAULT, (?), (?), (?), (?), (?), (?)) RETURNING id"),
         DELETE("DELETE FROM client WHERE  name = (?) AND phone = (?) AND address = (?) RETURNING id"),
         UPDATE("UPDATE client SET name = (?), phone = (?), address = (?), fax = (?), score = (?), notes = (?) WHERE id = (?) RETURNING id");

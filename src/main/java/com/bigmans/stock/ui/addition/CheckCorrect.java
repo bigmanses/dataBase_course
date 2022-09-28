@@ -16,12 +16,16 @@ import java.util.Objects;
 
 public class CheckCorrect {
     private Prototype service;
-   JDialog dialog;
+    JDialog dialog;
     final String noText = new String("Введите данные");
 
     public CheckCorrect(Prototype service, JDialog dialog) {
         this.service = service;
         this.dialog = dialog;
+    }
+
+    public CheckCorrect(Prototype service) {
+        this.service = service;
     }
 
     public int checkManufacturer(JTextField text) {
@@ -53,6 +57,41 @@ public class CheckCorrect {
         return error;
     }
 
+    public boolean checkCorrectAmount(JTextField textField, int idProduct){
+        Product product = new ProductService(service.getConnect()).getId(idProduct);
+        int amount = product.getAmount();
+        if(Integer.parseInt(textField.getText()) > amount){
+            textField.setText(textField.getText() + " > " + amount);
+            textField.setBackground(Color.RED);
+            textField.addMouseListener(new MouseListenerClick());
+            return false;
+        }
+        product.setAmount(amount-Integer.parseInt(textField.getText()));
+        new ProductService(service.getConnect()).update(product);
+       return true;
+    }
+
+
+    public boolean checkCorrect(List<JTextField> texts, JFrame frame){
+        boolean error = false;
+        for (Component component : frame.getContentPane().getComponents()) {
+            if (component instanceof JTextField) {
+                if(Objects.equals(((JTextField) component).getText(), "") || Objects.equals(((JTextField) component).getText(), noText)){
+                    component.setBackground(Color.RED);
+                    ((JTextField) component).setText("Введите данные");
+                    texts.add((JTextField) component);
+                    component.addMouseListener(new MouseListenerClick());
+                    error = true;
+                } else{
+                    component.setBackground(Color.WHITE);
+                }
+                texts.add((JTextField) component);
+            }
+        }
+        return error;
+    }
+
+
     public List<Integer> checkContract(JTextField product, JTextField client) {
         ProductService productService = new ProductService(service.getConnect());
         ClientService clientService = new ClientService(service.getConnect());
@@ -73,7 +112,6 @@ public class CheckCorrect {
     public int checkScore(JTextField contract) {
         ContractService contractService = new ContractService(service.getConnect());
         List<Contract> contracts = contractService.read();
-        List<Integer> ids = new ArrayList<>();
         for (Contract contract1: contracts){
             if (contract1.getNumber().equals((String)contract.getText()))
                 return  contract1.getId();

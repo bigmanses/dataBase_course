@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class CreatorDialog {
 
@@ -294,6 +295,57 @@ public class CreatorDialog {
                 GridBagConstraints.HORIZONTAL, new Insets(0,0 ,0 ,0), 0, 0));
         return dialog;
     }
+
+    public static JDialog getContractDialogClient(JDialog dialog, JTable table, int numberStr, String clientName) {
+        dialog.setLayout(new GridBagLayout());
+        dialog.setSize(500, 500);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        dialog.setLocationRelativeTo(null);
+        dialog.add(new Label("дата"), new GridBagConstraints(0, 0, 1, 1, 0, 0.2, GridBagConstraints.NORTH,
+                GridBagConstraints.HORIZONTAL, new Insets(0,0 ,0 ,0), 0, 0));
+        dialog.add(new JTextField(formatter.format(Calendar.getInstance().getTime()), 10), new GridBagConstraints(1, 0, 1, 1, 0, 0.2, GridBagConstraints.NORTH,
+                GridBagConstraints.HORIZONTAL, new Insets(0,0 ,0 ,0), 0, 0));
+
+        dialog.add(new Label("номер"), new GridBagConstraints(0, 1, 1, 1, 0, 0.2, GridBagConstraints.NORTH,
+                GridBagConstraints.HORIZONTAL, new Insets(0,0 ,0 ,0), 0, 0));
+        dialog.add(new JTextField(String.valueOf((int) (Math.random()*(999999+1)) + 1000)), new GridBagConstraints(1, 1, 1, 1, 0, 0.2, GridBagConstraints.NORTH,
+                GridBagConstraints.HORIZONTAL, new Insets(0,0 ,0 ,0), 0, 0));
+
+        dialog.add(new Label("о контракте"), new GridBagConstraints(0, 2, 1, 1, 0, 0.2, GridBagConstraints.NORTH,
+                GridBagConstraints.HORIZONTAL, new Insets(0,0 ,0 ,0), 0, 0));
+        dialog.add(new JTextField("Покупка пользователем"), new GridBagConstraints(1, 2, 1, 1, 0, 0.2, GridBagConstraints.NORTH,
+                GridBagConstraints.HORIZONTAL, new Insets(0,0 ,0 ,0), 0, 0));
+
+        dialog.add(new Label("продукт"), new GridBagConstraints(0, 3, 1, 1, 0, 0.2, GridBagConstraints.NORTH,
+                GridBagConstraints.HORIZONTAL, new Insets(0,0 ,0 ,0), 0, 0));
+        dialog.add(new JTextField((String) table.getModel().getValueAt(numberStr, 0), 20), new GridBagConstraints(1, 3, 1, 1, 0, 0.2, GridBagConstraints.NORTH,
+                GridBagConstraints.HORIZONTAL, new Insets(0,0 ,0 ,0), 0, 0));
+
+        dialog.add(new Label("количество"), new GridBagConstraints(0, 4, 1, 1, 0, 0.2, GridBagConstraints.NORTH,
+                GridBagConstraints.HORIZONTAL, new Insets(0,1 ,0,1), 0, 0));
+        dialog.add(new JTextField(10), new GridBagConstraints(1, 4, 1, 1, 0, 0.2, GridBagConstraints.NORTH,
+                GridBagConstraints.HORIZONTAL, new Insets(0,0 ,0 ,0), 0, 0));
+
+        dialog.add(new Label("условия контракта"), new GridBagConstraints(0, 5, 1, 1, 0, 0.2, GridBagConstraints.NORTH,
+                GridBagConstraints.HORIZONTAL, new Insets(0,1 ,0,1), 0, 0));
+        dialog.add(new JTextField("Оплата картой"), new GridBagConstraints(1, 5, 1, 1, 0, 0.2, GridBagConstraints.NORTH,
+                GridBagConstraints.HORIZONTAL, new Insets(0,0 ,0 ,0), 0, 0));
+
+        dialog.add(new Label("покупатель"), new GridBagConstraints(0, 6, 1, 1, 0, 0.2, GridBagConstraints.NORTH,
+                GridBagConstraints.HORIZONTAL, new Insets(0,0 ,0 ,0), 0, 0));
+        dialog.add(new JTextField(clientName, 20), new GridBagConstraints(1, 6, 1, 1, 0, 0.2, GridBagConstraints.NORTH,
+                GridBagConstraints.HORIZONTAL, new Insets(0,0 ,0 ,0), 0, 0));
+
+        dialog.add(new Label("цена"), new GridBagConstraints(0, 7, 1, 1, 0, 0.2, GridBagConstraints.NORTH,
+                GridBagConstraints.HORIZONTAL, new Insets(0,0 ,0 ,0), 0, 0));
+        dialog.add(new JTextField(String.valueOf(table.getModel().getValueAt(numberStr, 2))), new GridBagConstraints(1, 7, 1, 1, 0, 0.2, GridBagConstraints.NORTH,
+                GridBagConstraints.HORIZONTAL, new Insets(0,0 ,0 ,0), 0, 0));
+        Button button = new Button("Офрмить");
+        dialog.add(button, new GridBagConstraints(1, 9, 1, 1, 0, 0.2, GridBagConstraints.NORTH,
+                GridBagConstraints.HORIZONTAL, new Insets(0,0 ,0 ,0), 0, 0));
+        return dialog;
+    }
+
 
     public static JDialog getContractDialog(JDialog dialog, JRadioButton postavka, JRadioButton sale, Contract contract) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");

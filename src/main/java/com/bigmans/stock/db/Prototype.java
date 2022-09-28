@@ -10,5 +10,8 @@ public interface Prototype<Entity> {
     boolean update(Entity model);
     boolean delete(Entity model);
     Entity getId(int id) throws SQLException;
+
+    List<Entity> getName(String name);
+
     Connection getConnect();
 }

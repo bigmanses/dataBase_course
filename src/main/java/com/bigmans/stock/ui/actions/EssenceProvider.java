@@ -43,6 +43,7 @@ public class EssenceProvider {
 
     static public Contract getContract(JTable table, int row){
         Contract contract = new Contract();
+        contract.setId((Integer) table.getModel().getValueAt(row,-1));
         contract.setDate_contract((Date) (table.getModel().getValueAt(row,0)));
         contract.setNumber((String) table.getModel().getValueAt(row,1));
         contract.setAbout((String) table.getModel().getValueAt(row,2));

@@ -42,6 +42,11 @@ public class ManufacturerService implements Prototype<Manufacturer>{
     }
 
     @Override
+    public List<Manufacturer> getName(String name) {
+        return null;
+    }
+
+    @Override
     public Connection getConnect() {
         return connection;
     }

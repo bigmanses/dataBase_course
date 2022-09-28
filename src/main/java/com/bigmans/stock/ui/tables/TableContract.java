@@ -47,7 +47,7 @@ public class TableContract extends AbstractTableModel {
             case 5: return contract.getTerms();
             case 6: return clientService.getId(contract.getClient().getId()).getName();
             case 7: return contract.getPrice();
-            case 8: if(contract.isSale()) return VersionType.SUPPLY.getId(); else return VersionType.SALE.getId();
+            case 8: if(contract.isSale()) return VersionType.SALE.getId(); else return VersionType.SUPPLY.getId();
             case 9: return contract.getProduct().getId();
             case 10: return contract.getClient().getId();
         }

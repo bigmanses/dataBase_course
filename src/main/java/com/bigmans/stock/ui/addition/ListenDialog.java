@@ -59,15 +59,20 @@ public class ListenDialog {
         });
     }
 
+    /**
+     * Действия, выполняющие при нажатие книпки
+     * */
     public void listenDialogContract(JDialog dialog){
         Component[] components = dialog.getContentPane().getComponents();
         Button button = (Button) dialog.getContentPane().getComponents()[components.length - 1];
         button.addActionListener(actionEvent1 -> {
             List<JTextField> texts = new ArrayList<>();
-            checkCorrectInput.checkCorrect(texts);
+
             if(!checkCorrectInput.checkCorrect(texts)){
                 if(checkCorrectInput.checkContract(texts.get(3), texts.get(6)).size() > 1) {
-                    saveUpdateData.saveContract(texts,checkCorrectInput.checkContract(texts.get(3), texts.get(6)));
+                    if(checkCorrectInput.checkCorrectAmount(texts.get(4),checkCorrectInput.checkContract(texts.get(3), texts.get(6)).get(0))) {
+                        saveUpdateData.saveContract(texts, checkCorrectInput.checkContract(texts.get(3), texts.get(6)));
+                    }
                 } else{
                     dialog.setVisible(false);
                     JOptionPane.showMessageDialog(frame, "Такого клиента/продукта нет в Базе", "Error", JOptionPane.ERROR_MESSAGE);
